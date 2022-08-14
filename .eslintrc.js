@@ -22,6 +22,7 @@ module.exports = {
 	],
 	rules: {
 		'@typescript-eslint/no-var-requires': 'off',
+		'@typescript-eslint/no-explicit-any': 'off',
 
 		'react/jsx-uses-react': 1,
 		'simple-import-sort/exports': 'error',
