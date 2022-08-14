@@ -17,22 +17,28 @@ export const exists = (id: string): Promise<boolean> => {
 
 export const crossRequire = async (
 	id: RequireId,
+	fallback?: unknown,
 	req: NodeRequire | RequireResolve = nodeRequire,
-): Promise<string> => {
+): Promise<any> => {
 	const moduleIds: [string, string][] = wrapArray(id).map((relativeId) => [
 		resolve(process.cwd(), relativeId),
 		resolve(__dirname, relativeId),
 	]);
 
-	for (const [projectId, rockId] of moduleIds) {
+	for (const [projectId, cliId] of moduleIds) {
 		if (await exists(projectId)) {
 			return req(projectId);
-		} else if (await exists(rockId)) {
-			return req(rockId);
+		} else if (await exists(cliId)) {
+			return req(cliId);
 		}
 	}
+
+	return fallback;
 };
 
-export const crossResolve = async (id: string): Promise<string> => {
-	return crossRequire(id, nodeRequire.resolve);
+export const crossResolve = async (
+	id: string,
+	fallback?: string,
+): Promise<string> => {
+	return (await crossRequire(id, fallback, nodeRequire.resolve)) || fallback;
 };
