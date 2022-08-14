@@ -1,7 +1,6 @@
-import type { ChalkInstance } from 'chalk';
 import type { MetacraftLogger, ParsedConfigs } from 'utils/types';
 
-export const defaultLogger = (chalk: ChalkInstance): MetacraftLogger => {
+export const defaultLogger = (chalk: any): MetacraftLogger => {
 	const { gray, red, green, blue, yellow, magenta } = chalk;
 
 	const mark = '｢metacraft｣';

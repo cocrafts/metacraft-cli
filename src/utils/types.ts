@@ -1,4 +1,3 @@
-import type { ChalkInstance } from 'chalk';
 import type { Express } from 'express';
 import type { Configuration, WebpackPluginFunction } from 'webpack';
 
@@ -51,24 +50,25 @@ export interface ParsedConfigs {
 	keepPreviousBuild: boolean;
 }
 
-export interface MetacraftModules {
-	chalk?: ChalkInstance;
-	webpack?: WebpackPluginFunction;
-	express?: Express;
-	ProgressBarPlugin?: never;
-	HtmlPlugin?: never;
-	DevServer?: never;
-}
-
-export interface MetacraftInternals {
-	configs: MetacraftConfigs;
-	modules: MetacraftModules;
-}
-
 export interface MetacraftLogger {
 	greeting: (version: string) => void;
 	noEntry: (availableEntries: string) => void;
 	nodeDetected: (entry: string, configs: ParsedConfigs) => void;
 	launchNodeServer: (configs: ParsedConfigs) => void;
 	launchNodeFailure: (entry: string, configs: ParsedConfigs) => void;
+}
+
+export interface MetacraftModules {
+	chalk?: any;
+	webpack?: WebpackPluginFunction;
+	express?: Express;
+	ProgressBarPlugin?: never;
+	HtmlPlugin?: never;
+	DevServer?: never;
+	logger?: MetacraftLogger;
+}
+
+export interface MetacraftInternals {
+	configs: MetacraftConfigs;
+	modules: MetacraftModules;
 }

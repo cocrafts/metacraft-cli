@@ -21,7 +21,7 @@ export const guessEntry = async (
 
 export const parseConfigs = (
 	configs: MetacraftConfigs,
-	args,
+	args?,
 ): ParsedConfigs => {
 	const env = configs.env();
 	const isProduction = configs.isProduction(env);
