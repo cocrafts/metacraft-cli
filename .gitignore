@@ -1,0 +1,16 @@
+# OSX
+#
+.DS_Store
+
+.idea
+
+playground/
+pkg/
+bundle.js
+lib.js
+wasm/target
+wasm/pkg
+
+node_modules/
+npm-debug.log
+yarn-error.log

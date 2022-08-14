@@ -1,0 +1,10 @@
+{
+	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+			"commands/*": ["src/commands/*"],
+			"middlewares/*": ["src/middlewares/*"],
+			"utils/*": ["src/utils/*"]
+		}
+	}
+}

@@ -1,0 +1,75 @@
+{
+  "name": "metacraft-cli",
+  "description": "lightning fast development/boilerplate tool for javascript/node.js",
+  "author": "stormgate.io",
+  "bin": {
+    "metacraft": "cli.js"
+  },
+  "files": [
+    "assets/**/*",
+    "!assets/templates/**/node_module",
+    "wasm/pkg/**/*",
+    "bundle.js",
+    "server.js",
+    "cli.js"
+  ],
+  "scripts": {
+    "dev": "webpack --watch",
+    "build": "mode=production && webpack && cd wasm && wasm-pack build --target nodejs",
+    "release": "npm run build && npm publish",
+    "lint": "eslint",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cocrafts/metacraft-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cocrafts/metacraft-cli/issues"
+  },
+  "homepage": "https://stormgate.io/build",
+  "dependencies": {
+    "@swc/cli": "^0.1.57",
+    "@swc/core": "^1.2.230",
+    "@swc/jest": "^0.2.22",
+    "@swc/register": "^0.1.10",
+    "chalk": "^5.0.1",
+    "chokidar": "^3.5.3",
+    "express": "^4.18.1",
+    "handlebars-loader": "^1.7.2",
+    "html-webpack-plugin": "^5.5.0",
+    "invalidate-module": "^1.0.0",
+    "lodash": "^4.17.21",
+    "progress-bar-webpack-plugin": "^2.1.0",
+    "regenerator-runtime": "^0.13.9",
+    "swc-loader": "^0.2.3",
+    "typescript": "^4.7.4",
+    "uuid": "^8.3.2",
+    "webpack": "^5.74.0",
+    "webpack-dev-server": "^4.10.0",
+    "yargs": "^17.5.1"
+  },
+  "devDependencies": {
+    "@types/chalk": "^2.2.0",
+    "@types/express": "^4.17.13",
+    "@types/jest": "^28.1.6",
+    "@types/lodash": "^4.14.182",
+    "@types/node": "^18.7.3",
+    "@types/webpack": "^5.28.0",
+    "@types/yargs": "^17.0.11",
+    "@typescript-eslint/eslint-plugin": "^5.29.0",
+    "@typescript-eslint/parser": "^5.29.0",
+    "@wasm-tool/wasm-pack-plugin": "^1.6.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "jest": "^26.6.3",
+    "prettier": "^2.7.1",
+    "webpack-cli": "^4.10.0",
+    "webpack-node-externals": "^3.0.0"
+  }
+}
