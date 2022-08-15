@@ -1,5 +1,6 @@
 import type { Express } from 'express';
-import type { Configuration, WebpackPluginFunction } from 'webpack';
+import type { Configuration } from 'webpack';
+import type { Configuration as DevConfiguration } from 'webpack-dev-server';
 
 export interface ModuleAlias {
 	global: Record<string, string>;
@@ -7,8 +8,14 @@ export interface ModuleAlias {
 	node: Record<string, string>;
 }
 
-type WebpackMiddleware = (configs: Configuration) => Configuration;
-type DevMiddleware = (configs: never) => never;
+export type WebpackMiddleware = (
+	configs: Configuration,
+	internal: MetacraftInternals,
+) => Promise<Configuration>;
+export type DevMiddleware = (
+	configs: DevConfiguration,
+	internal: MetacraftInternals,
+) => Promise<DevConfiguration>;
 
 export interface HotOptions {
 	reload: boolean;
@@ -33,7 +40,7 @@ export interface MetacraftConfigs {
 	devMiddlewares?: DevMiddleware[];
 	hotOptions?: HotOptions;
 	htmlTemplate?: string;
-	htmlOptions?: Record<string, never>;
+	templateParameters?: Record<string, any>;
 	moduleAlias?: ModuleAlias;
 	resolves?: Record<string, string>;
 }
@@ -56,15 +63,19 @@ export interface MetacraftLogger {
 	nodeDetected: (entry: string, configs: ParsedConfigs) => void;
 	launchNodeServer: (configs: ParsedConfigs) => void;
 	launchNodeFailure: (entry: string, configs: ParsedConfigs) => void;
+	devDetected: (entry: string, configs: ParsedConfigs) => void;
+	launchDevServer: (configs: ParsedConfigs) => void;
+	listeningForChanges: () => void;
 }
 
 export interface MetacraftModules {
 	chalk?: any;
-	webpack?: WebpackPluginFunction;
+	webpack?: any;
 	express?: Express;
-	ProgressBarPlugin?: never;
-	HtmlPlugin?: never;
-	DevServer?: never;
+	ProgressBarPlugin?: any;
+	HtmlPlugin?: any;
+	CssExtractPlugin?: any;
+	DevServer?: any;
 	logger?: MetacraftLogger;
 }
 

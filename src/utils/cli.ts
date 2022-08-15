@@ -31,9 +31,9 @@ export const parseConfigs = (
 		isProduction,
 		publicPath: configs.publicPath(isProduction, env),
 		staticPath: configs.staticPath(isProduction, env),
-		port: configs.port(args.port),
-		serverPort: configs.serverPort(args.serverPort),
-		host: configs.host(args.host),
+		port: configs.port(args?.port),
+		serverPort: configs.serverPort(args?.serverPort),
+		host: configs.host(args?.host),
 		optimizeMode: configs.optimizeMode(env),
 		keepPreviousBuild: configs.keepPreviousBuild(isProduction),
 	};
@@ -46,9 +46,11 @@ export const extractInternals = async (): Promise<MetacraftInternals> => {
 	const moduleMap = merge(
 		{
 			chalk: 'node_modules/chalk',
+			webpack: 'node_modules/webpack',
 			express: 'node_modules/express',
 			ProgressBarPlugin: 'node_modules/progress-bar-webpack-plugin',
 			HtmlPlugin: 'node_modules/html-webpack-plugin',
+			CssExtractPlugin: 'node_modules/mini-css-extract-plugin',
 			DevServer: 'node_modules/webpack-dev-server',
 		},
 		projectConfigs.resolves || {},
@@ -65,7 +67,7 @@ export const extractInternals = async (): Promise<MetacraftInternals> => {
 			env: () => process.env.ENV || 'development',
 			isProduction: (env) => env === 'PRODUCTION',
 			publicPath: () => '/',
-			staticPath: () => 'rockman',
+			staticPath: () => 'metacraft',
 			port: (cliDefault) => process.env.PORT || cliDefault || 3000,
 			serverPort: (cliDefault) => process.env.PORT || cliDefault || 3005,
 			host: (cliDefault) => process.env.HOST || cliDefault || 'localhost',
@@ -73,10 +75,14 @@ export const extractInternals = async (): Promise<MetacraftInternals> => {
 			keepPreviousBuild: () => false,
 			buildId: uuid,
 			moduleAlias: { global: {}, web: {}, node: {} },
-			htmlTemplate: await crossResolve('assets/index.hbs'),
-			htmlOptions: {},
+			htmlTemplate: await crossResolve(['index.ejs', 'assets/index.ejs']),
+			templateParameters: {
+				title: 'Metacraft',
+			},
 			resolves: {},
-		},
+			webpackMiddlewares: [],
+			devMiddlewares: [],
+		} as MetacraftConfigs,
 		projectConfigs,
 	);
 
@@ -85,7 +91,7 @@ export const extractInternals = async (): Promise<MetacraftInternals> => {
 
 const configEntry = 'metacraft.config.js';
 
-export const webEntries = [
+export const devEntries = [
 	'index.web.js',
 	'index.js',
 	'index.ts',

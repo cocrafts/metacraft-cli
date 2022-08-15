@@ -1,11 +1,20 @@
 import { fork } from 'child_process';
 import { resolve } from 'path';
 
-import type { MetacraftLogger, ParsedConfigs } from 'utils/types';
+import { bareDevMiddleware } from 'middlewares/dev';
+import { bareWebpackMiddleware } from 'middlewares/webpack';
+import type {
+	MetacraftInternals,
+	MetacraftLogger,
+	ParsedConfigs,
+} from 'utils/types';
+import type { Configuration } from 'webpack';
+import type { Configuration as DevConfiguration } from 'webpack-dev-server';
 
-interface LaunchNodeArgs {
+interface LaunchArgs {
 	entry?: string;
 	logger: MetacraftLogger;
+	internal?: MetacraftInternals;
 	parsedConfigs?: ParsedConfigs;
 }
 
@@ -13,7 +22,7 @@ export const launchNodeIfPossible = async ({
 	entry,
 	logger,
 	parsedConfigs,
-}: LaunchNodeArgs): Promise<void> => {
+}: LaunchArgs): Promise<void> => {
 	if (!entry) return;
 
 	logger.nodeDetected(entry, parsedConfigs);
@@ -29,6 +38,52 @@ export const launchNodeIfPossible = async ({
 	}
 };
 
-export const launchDevelopment = async (): Promise<void> => {
-	console.log('coming soon!');
+export const launchDevIfPossible = async ({
+	entry,
+	logger,
+	internal,
+	parsedConfigs,
+}: LaunchArgs): Promise<void> => {
+	if (!entry) return;
+	const { devMiddlewares, webpackMiddlewares } = internal.configs;
+	const { webpack, DevServer } = internal.modules;
+	const { port, host } = parsedConfigs;
+
+	logger.devDetected(entry, parsedConfigs);
+	logger.launchDevServer(parsedConfigs);
+
+	const webpackItems = [bareWebpackMiddleware, ...webpackMiddlewares];
+	const devItems = [bareDevMiddleware, ...devMiddlewares];
+
+	let webpackConfig: Configuration;
+	let devConfig: DevConfiguration;
+
+	for (let i = 0; i < webpackItems.length; i += 1) {
+		const middleware = webpackItems[i];
+		const nextConfig = await middleware(webpackConfig, internal);
+
+		if (nextConfig) {
+			webpackConfig = nextConfig;
+		} else {
+			break;
+		}
+	}
+
+	for (let i = 0; i < devItems.length; i += 1) {
+		const middleware = devItems[i];
+		const nextConfig = await middleware(devConfig, internal);
+
+		if (nextConfig) {
+			devConfig = nextConfig;
+		} else {
+			break;
+		}
+	}
+
+	const compiler = webpack(webpackConfig);
+	const devServer = new DevServer(compiler, devConfig);
+
+	devServer.listen(port, host, (error) => {
+		if (error) console.log(error);
+	});
 };

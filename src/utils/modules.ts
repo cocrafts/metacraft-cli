@@ -1,12 +1,14 @@
 import { access, constants } from 'fs';
 import { resolve } from 'path';
 
+import { isArray } from 'lodash';
+
 type RequireId = string | string[];
 
 const nodeRequire = global.nodeRequire;
 
 export const wrapArray = (value: RequireId): string[] => {
-	return value?.length ? [value as string] : (value as string[]);
+	return isArray(value) ? value : [value];
 };
 
 export const exists = (id: string): Promise<boolean> => {
@@ -37,7 +39,7 @@ export const crossRequire = async (
 };
 
 export const crossResolve = async (
-	id: string,
+	id: RequireId,
 	fallback?: string,
 ): Promise<string> => {
 	return (await crossRequire(id, fallback, nodeRequire.resolve)) || fallback;

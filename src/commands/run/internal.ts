@@ -1,4 +1,4 @@
-import { guessEntry, nodeEntries, webEntries } from 'utils/cli';
+import { devEntries, guessEntry, nodeEntries } from 'utils/cli';
 import type { MetacraftLogger } from 'utils/types';
 
 interface RunEntries {
@@ -11,13 +11,13 @@ const packageJson = global.packageJson;
 export const guessEntries = async (
 	logger: MetacraftLogger,
 ): Promise<RunEntries> => {
-	const webEntry = await guessEntry(webEntries);
+	const webEntry = await guessEntry(devEntries);
 	const nodeEntry = await guessEntry(nodeEntries);
 
 	logger.greeting(packageJson.version);
 
 	if (!webEntry && !nodeEntry) {
-		logger.noEntry([...webEntries, ...nodeEntries].join(', '));
+		logger.noEntry([...devEntries, ...nodeEntries].join(', '));
 	}
 
 	return { nodeEntry, webEntry };
