@@ -10,9 +10,8 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 ) => {
 	let brightFlag = false;
 	let initialBuild = true;
-	const { env, isProduction, publicPath, staticPath } = parseConfigs(
-		internal.configs,
-	);
+	const parsedConfigs = parseConfigs(internal.configs);
+	const { env, isProduction, publicPath, staticPath } = parsedConfigs;
 	const { buildId, moduleAlias, htmlTemplate, templateParameters } =
 		internal.configs;
 	const { webpack, HtmlPlugin, ProgressBarPlugin, CssExtractPlugin, chalk } =
@@ -118,12 +117,10 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 				'process.env.NODE_ENV': JSON.stringify(env),
 			}),
 			new HtmlPlugin({
-				isProduction,
-				publicPath,
-				appName: 'Metacraft',
 				template: htmlTemplate,
 				templateParameters: {
-					name: 'Cloud Le',
+					title: 'Metacraft',
+					...parsedConfigs,
 					...templateParameters,
 				},
 				filename: 'index.html',

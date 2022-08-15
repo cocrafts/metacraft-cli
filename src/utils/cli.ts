@@ -76,9 +76,7 @@ export const extractInternals = async (): Promise<MetacraftInternals> => {
 			buildId: uuid,
 			moduleAlias: { global: {}, web: {}, node: {} },
 			htmlTemplate: await crossResolve(['index.ejs', 'assets/index.ejs']),
-			templateParameters: {
-				title: 'Metacraft',
-			},
+			templateParameters: {},
 			resolves: {},
 			webpackMiddlewares: [],
 			devMiddlewares: [],
