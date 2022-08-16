@@ -54,8 +54,8 @@ export const launchDevIfPossible = async ({
 	const webpackItems = [bareWebpackMiddleware, ...webpackMiddlewares];
 	const devItems = [bareDevMiddleware, ...devMiddlewares];
 
-	let webpackConfig: Configuration;
-	let devConfig: DevConfiguration;
+	let webpackConfig: Configuration = {};
+	let devConfig: DevConfiguration = {};
 
 	for (let i = 0; i < webpackItems.length; i += 1) {
 		const middleware = webpackItems[i];
