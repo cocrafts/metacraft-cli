@@ -11,21 +11,21 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 	let brightFlag = false;
 	let initialBuild = true;
 	const parsedConfigs = parseConfigs(internal.configs);
-	const { env, isProduction, publicPath, staticPath } = parsedConfigs;
+	const { env, isProduction, publicPath, staticPath, stats } = parsedConfigs;
 	const { buildId, moduleAlias, htmlTemplate, templateParameters } =
 		internal.configs;
 	const { webpack, HtmlPlugin, ProgressBarPlugin, CssExtractPlugin, chalk } =
 		internal.modules;
 	const { gray, blue } = chalk;
 	const uniqueId = buildId();
-	const appEntry = await guessEntry(devEntries);
+	const appEntries = [
+		await crossResolve(['style.sass', 'assets/style.sass']),
+		await guessEntry(devEntries),
+	];
 	const devUri = resolve(__dirname, 'node_modules/webpack-dev-server');
 	const hotUri = resolve(__dirname, 'node_modules/webpack/hot/only-dev-server');
 	const hotEntries = [`${devUri}/client?${publicPath}`, hotUri];
-	const babelPlugins = [];
-	const conditionalPlugins = isProduction
-		? []
-		: [new webpack.HotModuleReplacementPlugin()];
+	const conditionalPlugins = [];
 	const reactAvailable = exists('react');
 
 	if (isProduction) {
@@ -38,20 +38,20 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 		);
 
 		conditionalPlugins.push(new ReactRefreshWebpackPlugin());
-		babelPlugins.push(
-			await crossResolve('node_modules/react-refresh/babel.js'),
-		);
 	}
 
 	return {
 		context: process.cwd(),
+		stats,
+		infrastructureLogging: {
+			level: 'warn',
+		},
 		mode: isProduction ? 'production' : 'development',
 		entry: {
 			app: {
-				import: isProduction ? appEntry : [...hotEntries, appEntry],
+				import: isProduction ? appEntries : [...hotEntries, ...appEntries],
 				filename: isProduction ? `${uniqueId}.js` : '[name].js',
 			},
-			style: await crossResolve(['style.sass', 'assets/style.sass']),
 		},
 		optimization: {
 			minimize: isProduction,
@@ -87,11 +87,16 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 			rules: [
 				{
 					test: /\.(ts|js)x?$/,
-					loader: 'babel-loader',
+					loader: 'swc-loader',
 					options: {
-						compact: false,
-						cacheDirectory: true,
-						plugins: babelPlugins,
+						jsc: {
+							transform: {
+								react: {
+									development: !isProduction,
+									refresh: !isProduction,
+								},
+							},
+						},
 					},
 				},
 				{

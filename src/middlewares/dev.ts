@@ -1,14 +1,24 @@
+import { join } from 'path';
+
 import { parseConfigs } from 'utils/cli';
 import { DevMiddleware } from 'utils/types';
 
 export const bareDevMiddleware: DevMiddleware = async (configs, internal) => {
-	const { publicPath, port, optimizeMode } = parseConfigs(internal.configs);
+	const { publicPath, port } = parseConfigs(internal.configs);
 
 	return {
-		publicPath,
 		port,
-		contentBase: 'metacraft',
 		hot: true,
+		static: {
+			publicPath,
+			directory: join(process.cwd(), 'metacraft'),
+		},
+		client: {
+			progress: true,
+			overlay: true,
+			logging: 'warn',
+		},
+		compress: true,
 		historyApiFallback: true,
 		headers: {
 			'Access-Control-Allow-Origin': '*',
@@ -16,27 +26,5 @@ export const bareDevMiddleware: DevMiddleware = async (configs, internal) => {
 			'Access-Control-Allow-Headers':
 				'X-Requested-With, content-type, Authorization',
 		},
-		stats: {
-			context: process.cwd(),
-			all: true,
-			assets: optimizeMode,
-			colors: true,
-			version: optimizeMode,
-			hash: optimizeMode,
-			timings: true,
-			chunks: optimizeMode,
-			performance: optimizeMode,
-			modules: optimizeMode,
-			moduleTrace: optimizeMode,
-			modulesSort: 'size',
-			chunkModules: optimizeMode,
-			chunkOrigins: optimizeMode,
-			cached: true,
-			error: true,
-			cachedAssets: optimizeMode,
-		},
-		clientLogLevel: 'silent',
-		noInfo: !optimizeMode,
-		overlay: true,
 	};
 };

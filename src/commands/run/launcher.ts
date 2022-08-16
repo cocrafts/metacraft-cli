@@ -47,7 +47,6 @@ export const launchDevIfPossible = async ({
 	if (!entry) return;
 	const { devMiddlewares, webpackMiddlewares } = internal.configs;
 	const { webpack, DevServer } = internal.modules;
-	const { port, host } = parsedConfigs;
 
 	logger.devDetected(entry, parsedConfigs);
 	logger.launchDevServer(parsedConfigs);
@@ -81,9 +80,7 @@ export const launchDevIfPossible = async ({
 	}
 
 	const compiler = webpack(webpackConfig);
-	const devServer = new DevServer(compiler, devConfig);
+	const devServer = new DevServer(devConfig, compiler);
 
-	devServer.listen(port, host, (error) => {
-		if (error) console.log(error);
-	});
+	devServer.start();
 };

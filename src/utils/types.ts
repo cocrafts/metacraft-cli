@@ -1,5 +1,5 @@
 import type { Express } from 'express';
-import type { Configuration } from 'webpack';
+import type { Configuration, StatsOptions } from 'webpack';
 import type { Configuration as DevConfiguration } from 'webpack-dev-server';
 
 export interface ModuleAlias {
@@ -32,7 +32,7 @@ export interface MetacraftConfigs {
 	host?: (cliDefault: string) => string;
 	port?: (cliDefault: string) => string | number;
 	serverPort?: (cliDefault: string) => string | number;
-	optimizeMode?: (env: string) => boolean;
+	stats?: (env: string) => StatsOptions;
 	keepPreviousBuild?: (isProd: boolean) => boolean;
 	buildCleanUp?: (idProd: boolean) => void;
 	buildId?: () => string;
@@ -53,7 +53,7 @@ export interface ParsedConfigs {
 	host: string;
 	port: string | number;
 	serverPort: string | number;
-	optimizeMode: boolean;
+	stats: StatsOptions;
 	keepPreviousBuild: boolean;
 }
 
