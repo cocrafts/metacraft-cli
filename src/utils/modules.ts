@@ -22,16 +22,21 @@ export const crossRequire = async (
 	fallback?: unknown,
 	req: NodeRequire | RequireResolve = nodeRequire,
 ): Promise<any> => {
-	const moduleIds: [string, string][] = wrapArray(id).map((relativeId) => [
-		resolve(process.cwd(), relativeId),
-		resolve(__dirname, relativeId),
-	]);
+	const moduleIds: [string, string, string][] = wrapArray(id).map(
+		(relativeId) => [
+			resolve(process.cwd(), relativeId),
+			resolve(__dirname, relativeId),
+			resolve(__dirname, '../../', relativeId),
+		],
+	);
 
-	for (const [projectId, cliId] of moduleIds) {
+	for (const [projectId, localId, yarnGlobalId] of moduleIds) {
 		if (await exists(projectId)) {
 			return req(projectId);
-		} else if (await exists(cliId)) {
-			return req(cliId);
+		} else if (await exists(localId)) {
+			return req(localId);
+		} else if (await exists(yarnGlobalId)) {
+			return req(yarnGlobalId);
 		}
 	}
 

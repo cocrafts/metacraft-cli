@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 
 import { devEntries, guessEntry, parseConfigs } from 'utils/cli';
-import { crossRequire, crossResolve, exists } from 'utils/modules';
+import { crossResolve, exists } from 'utils/modules';
 import { WebpackMiddleware } from 'utils/types';
 
 export const bareWebpackMiddleware: WebpackMiddleware = async (
@@ -18,13 +18,19 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 		internal.modules;
 	const { gray, blue } = chalk;
 	const uniqueId = buildId();
+	const innerModuleUri = resolve(__dirname, 'node_modules');
+	const shareModuleUri = resolve(__dirname, '../'); /* yarn globals */
 	const appEntries = [
 		await crossResolve(['style.sass', 'assets/style.sass']),
 		await guessEntry(devEntries),
 	];
-	const devUri = resolve(__dirname, 'node_modules/webpack-dev-server');
-	const hotUri = resolve(__dirname, 'node_modules/webpack/hot/only-dev-server');
-	const hotEntries = [`${devUri}/client?${publicPath}`, hotUri];
+	const devUri = await crossResolve(
+		'node_modules/webpack-dev-server/client/index.js',
+	);
+	const hotUri = await crossResolve(
+		'node_modules/webpack/hot/only-dev-server.js',
+	);
+	const hotEntries = [`${devUri}?${publicPath}`, hotUri];
 	const conditionalPlugins = [];
 	const reactAvailable = exists('react');
 
@@ -64,7 +70,7 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 			chunkFilename: '[id].js',
 		},
 		resolveLoader: {
-			modules: [resolve(__dirname, 'node_modules')],
+			modules: [innerModuleUri, shareModuleUri],
 		},
 		resolve: {
 			mainFields: ['browser', 'main', 'module'],
