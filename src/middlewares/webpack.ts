@@ -1,5 +1,7 @@
 import { resolve } from 'path';
 
+import { Options } from '@swc/core';
+import { merge } from 'lodash';
 import { devEntries, guessEntry, parseConfigs } from 'utils/cli';
 import { crossResolve, exists } from 'utils/modules';
 import { WebpackMiddleware } from 'utils/types';
@@ -11,7 +13,8 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 	let brightFlag = false;
 	let initialBuild = true;
 	const parsedConfigs = parseConfigs(internal.configs);
-	const { env, isProduction, publicPath, staticPath, stats } = parsedConfigs;
+	const { env, isProduction, publicPath, staticPath, stats, swcOptions } =
+		parsedConfigs;
 	const { buildId, moduleAlias, htmlTemplate, templateParameters } =
 		internal.configs;
 	const { webpack, HtmlPlugin, ProgressBarPlugin, CssExtractPlugin, chalk } =
@@ -33,22 +36,37 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 	const hotEntries = [`${devUri}?${publicPath}`, hotUri];
 	const conditionalPlugins = [];
 	const reactAvailable = exists('react');
+	const runStats = {
+		context: process.cwd(),
+		all: false,
+		modulesSort: 'size',
+		cached: true,
+		warnings: true,
+		errors: true,
+	};
+	const swcRunOptions: Options = {
+		jsc: {
+			parser: {
+				syntax: 'typescript',
+				tsx: true,
+			},
+			transform: {},
+		},
+	};
+
+	if (reactAvailable) {
+		swcRunOptions.jsc.transform.react = {
+			development: !isProduction,
+			refresh: !isProduction,
+		};
+	}
 
 	if (isProduction) {
 		console.log('TODO: work with build.json');
 	}
-
-	if (!isProduction && reactAvailable) {
-		const ReactRefreshWebpackPlugin = await crossRequire(
-			'node_modules/@pmmmwh/react-refresh-webpack-plugin',
-		);
-
-		conditionalPlugins.push(new ReactRefreshWebpackPlugin());
-	}
-
 	return {
 		context: process.cwd(),
-		stats,
+		stats: merge(runStats, stats),
 		infrastructureLogging: {
 			level: 'warn',
 		},
@@ -94,16 +112,7 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 				{
 					test: /\.(ts|js)x?$/,
 					loader: 'swc-loader',
-					options: {
-						jsc: {
-							transform: {
-								react: {
-									development: !isProduction,
-									refresh: !isProduction,
-								},
-							},
-						},
-					},
+					options: merge(swcRunOptions, swcOptions),
 				},
 				{
 					test: /\.s[ac]ss$/i,

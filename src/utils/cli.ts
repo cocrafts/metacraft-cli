@@ -34,7 +34,8 @@ export const parseConfigs = (
 		port: configs.port(args?.port),
 		serverPort: configs.serverPort(args?.serverPort),
 		host: configs.host(args?.host),
-		stats: configs.stats(env),
+		stats: configs.stats(isProduction, env),
+		swcOptions: configs.swcOptions(isProduction, env),
 		keepPreviousBuild: configs.keepPreviousBuild(isProduction),
 	};
 };
@@ -71,14 +72,8 @@ export const extractInternals = async (): Promise<MetacraftInternals> => {
 			port: (cliDefault) => process.env.PORT || cliDefault || 3000,
 			serverPort: (cliDefault) => process.env.PORT || cliDefault || 3005,
 			host: (cliDefault) => process.env.HOST || cliDefault || 'localhost',
-			stats: () => ({
-				context: process.cwd(),
-				all: false,
-				modulesSort: 'size',
-				cached: true,
-				warnings: true,
-				errors: true,
-			}),
+			stats: () => ({}),
+			swcOptions: () => ({}),
 			keepPreviousBuild: () => false,
 			buildId: uuid,
 			moduleAlias: { global: {}, web: {}, node: {} },

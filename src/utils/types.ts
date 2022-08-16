@@ -1,3 +1,4 @@
+import { Options as SwcOptions } from '@swc/core';
 import type { Express } from 'express';
 import type { Configuration, StatsOptions } from 'webpack';
 import type { Configuration as DevConfiguration } from 'webpack-dev-server';
@@ -32,9 +33,10 @@ export interface MetacraftConfigs {
 	host?: (cliDefault: string) => string;
 	port?: (cliDefault: string) => string | number;
 	serverPort?: (cliDefault: string) => string | number;
-	stats?: (env: string) => StatsOptions;
+	stats?: (isProd: boolean, env: string) => StatsOptions;
+	swcOptions?: (isProd: boolean, env: string) => SwcOptions;
 	keepPreviousBuild?: (isProd: boolean) => boolean;
-	buildCleanUp?: (idProd: boolean) => void;
+	buildCleanUp?: (idProd: boolean, env: string) => void;
 	buildId?: () => string;
 	webpackMiddlewares?: WebpackMiddleware[];
 	devMiddlewares?: DevMiddleware[];
@@ -54,6 +56,7 @@ export interface ParsedConfigs {
 	port: string | number;
 	serverPort: string | number;
 	stats: StatsOptions;
+	swcOptions: SwcOptions;
 	keepPreviousBuild: boolean;
 }
 
