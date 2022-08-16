@@ -52,6 +52,7 @@ export const extractInternals = async (): Promise<MetacraftInternals> => {
 			ProgressBarPlugin: 'node_modules/progress-bar-webpack-plugin',
 			HtmlPlugin: 'node_modules/html-webpack-plugin',
 			CssExtractPlugin: 'node_modules/mini-css-extract-plugin',
+			ReactRefreshPlugin: 'node_modules/@pmmmwh/react-refresh-webpack-plugin',
 			DevServer: 'node_modules/webpack-dev-server',
 		},
 		projectConfigs.resolves || {},

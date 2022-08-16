@@ -78,6 +78,7 @@ export interface MetacraftModules {
 	ProgressBarPlugin?: any;
 	HtmlPlugin?: any;
 	CssExtractPlugin?: any;
+	ReactRefreshPlugin?: any;
 	DevServer?: any;
 	logger?: MetacraftLogger;
 }

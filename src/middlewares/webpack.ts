@@ -17,8 +17,14 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 		parsedConfigs;
 	const { buildId, moduleAlias, htmlTemplate, templateParameters } =
 		internal.configs;
-	const { webpack, HtmlPlugin, ProgressBarPlugin, CssExtractPlugin, chalk } =
-		internal.modules;
+	const {
+		webpack,
+		HtmlPlugin,
+		ProgressBarPlugin,
+		CssExtractPlugin,
+		ReactRefreshPlugin,
+		chalk,
+	} = internal.modules;
 	const { gray, blue } = chalk;
 	const uniqueId = buildId();
 	const innerModuleUri = resolve(__dirname, 'node_modules');
@@ -49,6 +55,7 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 			parser: {
 				syntax: 'typescript',
 				tsx: true,
+				dynamicImport: true,
 			},
 			transform: {},
 		},
@@ -56,14 +63,16 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 
 	if (reactAvailable) {
 		swcRunOptions.jsc.transform.react = {
-			development: !isProduction,
 			refresh: !isProduction,
 		};
 	}
 
 	if (isProduction) {
 		console.log('TODO: work with build.json');
+	} else {
+		conditionalPlugins.push(new ReactRefreshPlugin());
 	}
+
 	return {
 		context: process.cwd(),
 		stats: merge(runStats, stats),
