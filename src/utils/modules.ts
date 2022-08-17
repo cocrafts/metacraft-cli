@@ -11,7 +11,7 @@ export const wrapArray = (value: RequireId): string[] => {
 	return isArray(value) ? value : [value];
 };
 
-export const exists = (id: string): Promise<boolean> => {
+export const exists = async (id: string): Promise<boolean> => {
 	return new Promise((resolve) => {
 		access(id, constants.F_OK, (error) => resolve(!error));
 	});

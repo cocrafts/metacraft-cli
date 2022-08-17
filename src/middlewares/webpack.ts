@@ -1,10 +1,10 @@
 import { resolve } from 'path';
 
-import { Options } from '@swc/core';
 import { merge } from 'lodash';
 import { devEntries, guessEntry, parseConfigs } from 'utils/cli';
-import { crossResolve, exists } from 'utils/modules';
+import { crossResolve } from 'utils/modules';
 import { WebpackMiddleware } from 'utils/types';
+import { getJsRule } from 'utils/webpack';
 
 export const bareWebpackMiddleware: WebpackMiddleware = async (
 	configs,
@@ -13,10 +13,17 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 	let brightFlag = false;
 	let initialBuild = true;
 	const parsedConfigs = parseConfigs(internal.configs);
-	const { env, isProduction, publicPath, staticPath, stats, swcOptions } =
-		parsedConfigs;
-	const { buildId, moduleAlias, htmlTemplate, templateParameters } =
-		internal.configs;
+	const {
+		buildId,
+		env,
+		stats,
+		isProduction,
+		staticPath,
+		publicPath,
+		htmlTemplate,
+		templateParameters,
+		moduleAlias,
+	} = parsedConfigs;
 	const {
 		webpack,
 		HtmlPlugin,
@@ -39,9 +46,9 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 	const hotUri = await crossResolve(
 		'node_modules/webpack/hot/only-dev-server.js',
 	);
-	const hotEntries = [`${devUri}?${publicPath}`, hotUri];
 	const conditionalPlugins = [];
-	const reactAvailable = exists('react');
+	const hotEntries = [`${devUri}?${publicPath}`, hotUri];
+	const reactAvailable = await crossResolve('node_modules/react');
 	const runStats = {
 		context: process.cwd(),
 		all: false,
@@ -50,26 +57,13 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 		warnings: true,
 		errors: true,
 	};
-	const swcRunOptions: Options = {
-		jsc: {
-			parser: {
-				syntax: 'typescript',
-				tsx: true,
-				dynamicImport: true,
-			},
-			transform: {},
-		},
-	};
-
-	if (reactAvailable) {
-		swcRunOptions.jsc.transform.react = {
-			refresh: !isProduction,
-		};
-	}
+	const jsRule = await getJsRule(parsedConfigs);
 
 	if (isProduction) {
 		console.log('TODO: work with build.json');
-	} else {
+	}
+
+	if (reactAvailable && !isProduction) {
 		conditionalPlugins.push(new ReactRefreshPlugin());
 	}
 
@@ -118,11 +112,7 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 		},
 		module: {
 			rules: [
-				{
-					test: /\.(ts|js)x?$/,
-					loader: 'swc-loader',
-					options: merge(swcRunOptions, swcOptions),
-				},
+				jsRule,
 				{
 					test: /\.s[ac]ss$/i,
 					use: [CssExtractPlugin.loader, 'css-loader', 'sass-loader'],

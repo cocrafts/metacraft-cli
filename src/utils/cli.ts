@@ -27,6 +27,7 @@ export const parseConfigs = (
 	const isProduction = configs.isProduction(env);
 
 	return {
+		...configs,
 		env,
 		isProduction,
 		publicPath: configs.publicPath(isProduction, env),
@@ -83,6 +84,7 @@ export const extractInternals = async (): Promise<MetacraftInternals> => {
 			resolves: {},
 			webpackMiddlewares: [],
 			devMiddlewares: [],
+			useBabel: false,
 		} as MetacraftConfigs,
 		projectConfigs,
 	);

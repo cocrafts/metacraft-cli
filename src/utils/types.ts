@@ -25,7 +25,19 @@ export interface HotOptions {
 	dynamicPublicPath: boolean;
 }
 
-export interface MetacraftConfigs {
+interface CommonConfigs {
+	webpackMiddlewares?: WebpackMiddleware[];
+	devMiddlewares?: DevMiddleware[];
+	hotOptions?: HotOptions;
+	htmlTemplate?: string;
+	templateParameters?: Record<string, any>;
+	moduleAlias?: ModuleAlias;
+	resolves?: Record<string, string>;
+	buildId?: () => string;
+	useBabel?: boolean;
+}
+
+export type MetacraftConfigs = CommonConfigs & {
 	env?: () => string;
 	isProduction?: (env: string) => boolean;
 	publicPath?: (isProd: boolean, env: string) => string;
@@ -37,17 +49,9 @@ export interface MetacraftConfigs {
 	swcOptions?: (isProd: boolean, env: string) => SwcOptions;
 	keepPreviousBuild?: (isProd: boolean) => boolean;
 	buildCleanUp?: (idProd: boolean, env: string) => void;
-	buildId?: () => string;
-	webpackMiddlewares?: WebpackMiddleware[];
-	devMiddlewares?: DevMiddleware[];
-	hotOptions?: HotOptions;
-	htmlTemplate?: string;
-	templateParameters?: Record<string, any>;
-	moduleAlias?: ModuleAlias;
-	resolves?: Record<string, string>;
-}
+};
 
-export interface ParsedConfigs {
+export type ParsedConfigs = CommonConfigs & {
 	env: string;
 	isProduction: boolean;
 	publicPath: string;
@@ -58,7 +62,7 @@ export interface ParsedConfigs {
 	stats: StatsOptions;
 	swcOptions: SwcOptions;
 	keepPreviousBuild: boolean;
-}
+};
 
 export interface MetacraftLogger {
 	greeting: (version: string) => void;
