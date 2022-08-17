@@ -1,6 +1,6 @@
 {
   "name": "metacraft",
-  "version": "0.0.40",
+  "version": "0.0.41",
   "description": "lightning fast development/boilerplate tool for javascript/node.js",
   "author": "stormgate.io",
   "bin": {
@@ -32,6 +32,7 @@
   "dependencies": {
     "@babel/cli": "^7.18.10",
     "@babel/core": "^7.18.10",
+    "@babel/runtime": "^7.18.9",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
     "@swc/cli": "^0.1.57",
     "@swc/core": "^1.2.230",

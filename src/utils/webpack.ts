@@ -62,6 +62,8 @@ export const getBabelLoader = async ({
 		test: /\.(ts|js)x?$/,
 		loader: 'babel-loader',
 		options: {
+			compact: false,
+			cacheDirectory: true,
 			plugins,
 		},
 	};
