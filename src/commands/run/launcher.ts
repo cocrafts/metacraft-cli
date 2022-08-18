@@ -1,10 +1,9 @@
 import { fork } from 'child_process';
 import { resolve } from 'path';
 
-import type { Configuration } from 'webpack';
-import type { Configuration as DevConfiguration } from 'webpack-dev-server';
 import { bareDevMiddleware } from 'middlewares/dev';
 import { bareWebpackMiddleware } from 'middlewares/webpack';
+import { combineMiddlewares } from 'utils/middleware';
 import type {
 	MetacraftInternals,
 	MetacraftLogger,
@@ -51,36 +50,18 @@ export const launchDevIfPossible = async ({
 	logger.devDetected(entry, parsedConfigs);
 	logger.launchDevServer(parsedConfigs);
 
-	const webpackItems = [bareWebpackMiddleware, ...webpackMiddlewares];
-	const devItems = [bareDevMiddleware, ...devMiddlewares];
+	const webpackConfigs = await combineMiddlewares({
+		internal,
+		middlewares: [bareWebpackMiddleware, ...webpackMiddlewares],
+	});
 
-	let webpackConfig: Configuration = {};
-	let devConfig: DevConfiguration = {};
+	const devConfigs = await combineMiddlewares({
+		internal,
+		middlewares: [bareDevMiddleware, ...devMiddlewares],
+	});
 
-	for (let i = 0; i < webpackItems.length; i += 1) {
-		const middleware = webpackItems[i];
-		const nextConfig = await middleware(webpackConfig, internal);
-
-		if (nextConfig) {
-			webpackConfig = nextConfig;
-		} else {
-			break;
-		}
-	}
-
-	for (let i = 0; i < devItems.length; i += 1) {
-		const middleware = devItems[i];
-		const nextConfig = await middleware(devConfig, internal);
-
-		if (nextConfig) {
-			devConfig = nextConfig;
-		} else {
-			break;
-		}
-	}
-
-	const compiler = webpack(webpackConfig);
-	const devServer = new DevServer(devConfig, compiler);
+	const compiler = webpack(webpackConfigs);
+	const devServer = new DevServer(devConfigs, compiler);
 
 	devServer.start();
 };
