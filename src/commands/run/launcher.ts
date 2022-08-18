@@ -1,6 +1,8 @@
 import { fork } from 'child_process';
 import { resolve } from 'path';
 
+import type { Configuration } from 'webpack';
+import type { Configuration as DevConfiguration } from 'webpack-dev-server';
 import { bareDevMiddleware } from 'middlewares/dev';
 import { bareWebpackMiddleware } from 'middlewares/webpack';
 import type {
@@ -8,8 +10,6 @@ import type {
 	MetacraftLogger,
 	ParsedConfigs,
 } from 'utils/types';
-import type { Configuration } from 'webpack';
-import type { Configuration as DevConfiguration } from 'webpack-dev-server';
 
 interface LaunchArgs {
 	entry?: string;

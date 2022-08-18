@@ -1,7 +1,7 @@
-import { Options as SwcOptions } from '@swc/core';
-import type { Express } from 'express';
 import type { Configuration, StatsOptions } from 'webpack';
 import type { Configuration as DevConfiguration } from 'webpack-dev-server';
+import { Options as SwcOptions } from '@swc/core';
+import type { Express } from 'express';
 
 export interface ModuleAlias {
 	global: Record<string, string>;
@@ -72,7 +72,8 @@ export interface MetacraftLogger {
 	launchNodeFailure: (entry: string, configs: ParsedConfigs) => void;
 	devDetected: (entry: string, configs: ParsedConfigs) => void;
 	launchDevServer: (configs: ParsedConfigs) => void;
-	listeningForChanges: () => void;
+	listeningForChanges: (configs: ParsedConfigs) => void;
+	bundleComplete: (configs: ParsedConfigs) => void;
 }
 
 export interface MetacraftModules {

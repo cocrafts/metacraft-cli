@@ -31,7 +31,7 @@ const module: CommandModule = {
 			parsedConfigs,
 		});
 
-		logger.listeningForChanges();
+		logger.listeningForChanges(parsedConfigs);
 	},
 };
 

@@ -68,7 +68,7 @@ export const extractInternals = async (): Promise<MetacraftInternals> => {
 	const configs: MetacraftConfigs = merge(
 		{
 			env: () => process.env.ENV || 'development',
-			isProduction: (env) => env === 'PRODUCTION',
+			isProduction: (env) => env === 'production',
 			publicPath: () => '/',
 			staticPath: () => 'metacraft',
 			port: (cliDefault) => process.env.PORT || cliDefault || 3000,

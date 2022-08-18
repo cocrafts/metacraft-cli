@@ -43,5 +43,8 @@ export const defaultLogger = (chalk: any): MetacraftLogger => {
 		listeningForChanges: () => {
 			console.log(blue(' • ') + gray('listening for file changes...'));
 		},
+		bundleComplete: () => {
+			console.log(magenta(' • ') + green('bundle complete.'));
+		},
 	};
 };

@@ -33,7 +33,7 @@ module.exports = {
 					[
 						'^(assert|buffer|child_process|cluster|console|constants|crypto|dgram|dns|domain|events|fs|http|https|module|net|os|path|punycode|querystring|readline|repl|stream|string_decoder|sys|timers|tls|tty|url|util|vm|zlib|freelist|v8|process|async_hooks|http2|perf_hooks)(/.*|$)',
 					], // Node.js builtins
-					['^react', '^@?\\w'], // Packages. `react` related packages come first.
+					['^webpack', '^@?\\w'], // Packages. `react` related packages come first.
 					['^\\u0000'], // Side effect imports.
 					['^\\.\\.(?!/?$)', '^\\.\\./?$'], // Parent imports. Put `..` last.
 					['^\\./(?=.*/)(?!/?$)', '^\\.(?!/?$)', '^\\./?$'], // Other relative imports. Put same-folder imports and `.` last.

@@ -60,7 +60,7 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 	const jsRule = await getJsRule(parsedConfigs);
 
 	if (isProduction) {
-		console.log('TODO: work with build.json');
+		// TODO: work with build.json
 	}
 
 	if (reactAvailable && !isProduction) {

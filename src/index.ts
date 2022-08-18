@@ -1,3 +1,4 @@
+import runBundle from 'commands/bundle';
 import runCommand from 'commands/run';
 import { options } from 'utils/configs';
 import yargs from 'yargs';
@@ -5,7 +6,7 @@ import { hideBin } from 'yargs/helpers';
 
 export const cliInstance = yargs(hideBin(process.argv));
 
-[runCommand].forEach((options) => {
+[runCommand, runBundle].forEach((options) => {
 	cliInstance.command(options);
 });
 
