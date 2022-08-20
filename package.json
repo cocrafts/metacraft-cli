@@ -1,6 +1,6 @@
 {
-  "name": "metacraft",
-  "version": "0.0.43",
+  "name": "@metacraft/cli",
+  "version": "0.0.44",
   "description": "lightning fast development/boilerplate tool for javascript/node.js",
   "author": "stormgate.io",
   "bin": {
@@ -17,7 +17,7 @@
   "scripts": {
     "dev": "webpack --watch",
     "build": "mode=production && webpack && cd wasm && wasm-pack build --target nodejs",
-    "release": "npm run build && npm publish",
+    "release": "npm run build && npm publish --access public",
     "lint": "eslint",
     "test": "jest"
   },
