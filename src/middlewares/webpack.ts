@@ -35,7 +35,7 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 	const { gray, blue } = chalk;
 	const uniqueId = buildId();
 	const innerModuleUri = resolve(__dirname, 'node_modules');
-	const shareModuleUri = resolve(__dirname, '../'); /* yarn globals */
+	const shareModuleUri = resolve(__dirname, '../../'); /* yarn globals */
 	const appEntries = [
 		await crossResolve(['style.sass', 'assets/style.sass']),
 		await guessEntry(devEntries),

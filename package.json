@@ -1,6 +1,6 @@
 {
   "name": "@metacraft/cli",
-  "version": "0.0.45",
+  "version": "0.0.46",
   "description": "lightning fast development/boilerplate tool for javascript/node.js",
   "author": "stormgate.io",
   "bin": {
