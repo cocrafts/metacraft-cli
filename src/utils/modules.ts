@@ -26,7 +26,7 @@ export const crossRequire = async (
 		(relativeId) => [
 			resolve(process.cwd(), relativeId),
 			resolve(__dirname, relativeId),
-			resolve(__dirname, '../../', relativeId),
+			resolve(__dirname, '../../../', relativeId),
 		],
 	);
 
