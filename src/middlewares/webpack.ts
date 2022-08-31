@@ -27,6 +27,7 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 	const {
 		webpack,
 		HtmlPlugin,
+		TerserPlugin,
 		ProgressBarPlugin,
 		CssExtractPlugin,
 		ReactRefreshPlugin,
@@ -82,6 +83,11 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 		},
 		optimization: {
 			minimize: isProduction,
+			minimizer: [
+				new TerserPlugin({
+					extractComments: false,
+				}),
+			],
 			moduleIds: 'named',
 		},
 		output: {

@@ -1,6 +1,6 @@
 {
   "name": "@metacraft/cli",
-  "version": "0.0.46",
+  "version": "0.0.47",
   "description": "lightning fast development/boilerplate tool for javascript/node.js",
   "author": "stormgate.io",
   "bin": {
@@ -81,6 +81,7 @@
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "jest": "^26.6.3",
     "prettier": "^2.7.1",
+    "terser-webpack-plugin": "^5.3.6",
     "webpack-cli": "^4.10.0",
     "webpack-node-externals": "^3.0.0"
   }

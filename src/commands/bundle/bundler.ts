@@ -22,6 +22,7 @@ export const generateBundle = async ({
 	parsedConfigs,
 }: BundleArgs): Promise<void> => {
 	if (!entry) return;
+
 	const { webpackMiddlewares } = internal.configs;
 	const { webpack } = internal.modules;
 	const middlewares: WebpackMiddleware[] = [bare, ...webpackMiddlewares];
