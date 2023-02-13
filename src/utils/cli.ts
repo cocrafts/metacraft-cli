@@ -44,6 +44,7 @@ export const parseConfigs = (
 export const extractInternals = async (): Promise<MetacraftInternals> => {
 	const modules: MetacraftModules = {};
 	const projectConfigs: MetacraftConfigs = await crossRequire(configEntry, {});
+	const packageJson = await crossRequire('package.json');
 
 	const moduleMap = merge(
 		{
@@ -86,6 +87,7 @@ export const extractInternals = async (): Promise<MetacraftInternals> => {
 			webpackMiddlewares: [],
 			devMiddlewares: [],
 			useBabel: false,
+			useReact: !!packageJson?.dependencies?.react,
 		} as MetacraftConfigs,
 		projectConfigs,
 	);

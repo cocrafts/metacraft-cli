@@ -35,6 +35,7 @@ interface CommonConfigs {
 	resolves?: Record<string, string>;
 	buildId?: () => string;
 	useBabel?: boolean;
+	useReact?: boolean;
 }
 
 export type MetacraftConfigs = CommonConfigs & {

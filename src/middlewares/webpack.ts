@@ -23,6 +23,7 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 		htmlTemplate,
 		templateParameters,
 		moduleAlias,
+		useReact,
 	} = parsedConfigs;
 	const {
 		webpack,
@@ -49,7 +50,6 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 	);
 	const conditionalPlugins = [];
 	const hotEntries = [`${devUri}?${publicPath}`, hotUri];
-	const reactAvailable = await crossResolve('node_modules/react');
 	const runStats = {
 		context: process.cwd(),
 		all: false,
@@ -64,7 +64,7 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 		// TODO: work with build.json
 	}
 
-	if (reactAvailable && !isProduction) {
+	if (useReact && !isProduction) {
 		conditionalPlugins.push(new ReactRefreshPlugin());
 	}
 

@@ -1,6 +1,6 @@
+import { RuleSetRule } from 'webpack';
 import { Options as SwcOptions } from '@swc/core';
 import { merge } from 'lodash';
-import { RuleSetRule } from 'webpack';
 
 import { crossResolve } from './modules';
 import { ParsedConfigs } from './types';
@@ -20,9 +20,8 @@ export const getJsRule = async (
 export const getSwcRule = async ({
 	isProduction,
 	swcOptions,
+	useReact,
 }: ParsedConfigs): Promise<RuleSetRule> => {
-	const reactAvailable = await crossResolve('node_modules/react');
-
 	const options: SwcOptions = {
 		jsc: {
 			parser: {
@@ -34,8 +33,9 @@ export const getSwcRule = async ({
 		},
 	};
 
-	if (!isProduction && reactAvailable) {
+	if (useReact) {
 		options.jsc.transform.react = {
+			runtime: 'automatic',
 			refresh: !isProduction,
 		};
 	}
@@ -49,12 +49,12 @@ export const getSwcRule = async ({
 
 export const getBabelLoader = async ({
 	isProduction,
+	useReact,
 }: ParsedConfigs): Promise<RuleSetRule> => {
 	const plugins = [];
-	const reactAvailable = await crossResolve('node_modules/react');
 	const rRefreshUri = await crossResolve('node_modules/react-refresh/babel.js');
 
-	if (!isProduction && reactAvailable) {
+	if (useReact && !isProduction) {
 		plugins.push(rRefreshUri);
 	}
 
