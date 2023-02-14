@@ -40,6 +40,7 @@ module.exports = {
 			commands: resolve(__dirname, 'src/commands'),
 			middlewares: resolve(__dirname, 'src/middlewares'),
 			utils: resolve(__dirname, 'src/utils'),
+			plugins: resolve(__dirname, 'src/plugins'),
 			types: resolve(__dirname, 'src/types'),
 		},
 	},

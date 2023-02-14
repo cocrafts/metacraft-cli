@@ -1,6 +1,7 @@
 import { resolve } from 'path';
 
 import { merge } from 'lodash';
+import { generateHtmlPlugin } from 'plugins/html';
 import { devEntries, guessEntry, parseConfigs } from 'utils/cli';
 import { crossResolve } from 'utils/modules';
 import { WebpackMiddleware } from 'utils/types';
@@ -20,14 +21,11 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 		isProduction,
 		staticPath,
 		publicPath,
-		htmlTemplate,
-		templateParameters,
 		moduleAlias,
 		useReact,
 	} = parsedConfigs;
 	const {
 		webpack,
-		HtmlPlugin,
 		TerserPlugin,
 		ProgressBarPlugin,
 		CssExtractPlugin,
@@ -141,15 +139,7 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 				ENV: JSON.stringify(env),
 				'process.env.NODE_ENV': JSON.stringify(env),
 			}),
-			new HtmlPlugin({
-				template: htmlTemplate,
-				templateParameters: {
-					title: 'Metacraft',
-					...parsedConfigs,
-					...templateParameters,
-				},
-				filename: 'index.html',
-			}),
+			generateHtmlPlugin(internal, parsedConfigs),
 			new ProgressBarPlugin({
 				width: 18,
 				complete: '#',

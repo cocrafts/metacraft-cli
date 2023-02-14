@@ -4,6 +4,7 @@
 		"paths": {
 			"commands/*": ["src/commands/*"],
 			"middlewares/*": ["src/middlewares/*"],
+			"plugins/*": ["src/plugins/*"],
 			"utils/*": ["src/utils/*"]
 		}
 	}
