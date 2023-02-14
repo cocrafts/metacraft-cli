@@ -2,6 +2,7 @@ import { resolve } from 'path';
 
 import { merge } from 'lodash';
 import { generateHtmlPlugin } from 'plugins/html';
+import { generateProgressPlugin } from 'plugins/progress';
 import { devEntries, guessEntry, parseConfigs } from 'utils/cli';
 import { crossResolve } from 'utils/modules';
 import { WebpackMiddleware } from 'utils/types';
@@ -11,8 +12,6 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 	configs,
 	internal,
 ) => {
-	let brightFlag = false;
-	let initialBuild = true;
 	const parsedConfigs = parseConfigs(internal.configs);
 	const {
 		buildId,
@@ -24,15 +23,8 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 		moduleAlias,
 		useReact,
 	} = parsedConfigs;
-	const {
-		webpack,
-		TerserPlugin,
-		ProgressBarPlugin,
-		CssExtractPlugin,
-		ReactRefreshPlugin,
-		chalk,
-	} = internal.modules;
-	const { gray, blue } = chalk;
+	const { webpack, TerserPlugin, CssExtractPlugin, ReactRefreshPlugin } =
+		internal.modules;
 	const uniqueId = buildId();
 	const innerModuleUri = resolve(__dirname, 'node_modules');
 	const shareModuleUri = resolve(__dirname, '../../'); /* yarn globals */
@@ -140,26 +132,7 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 				'process.env.NODE_ENV': JSON.stringify(env),
 			}),
 			generateHtmlPlugin(internal, parsedConfigs),
-			new ProgressBarPlugin({
-				width: 18,
-				complete: '#',
-				incomplete: gray('#'),
-				format: `${blue(' • ')}[:bar] ${gray('(:elapsed seconds)')}`,
-				summary: false,
-				customSummary: (time) => {
-					const buildTime = `${time.substring(0, time.length - 1)}${gray('s')}`;
-					const alternatedColor = brightFlag ? (x) => x : gray;
-					const buildType = initialBuild
-						? 'initial build'
-						: 'hot module update';
-					const buildFlag = isProduction ? 'production bundle' : buildType;
-
-					console.log(alternatedColor(' •'), gray(`${buildFlag}`), buildTime);
-
-					brightFlag = !brightFlag;
-					initialBuild = false;
-				},
-			}),
+			generateProgressPlugin(internal, parsedConfigs),
 			new CssExtractPlugin(),
 			...conditionalPlugins,
 		],
