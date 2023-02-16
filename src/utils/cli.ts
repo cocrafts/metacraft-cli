@@ -83,6 +83,7 @@ export const extractInternals = async (): Promise<MetacraftInternals> => {
 			moduleAlias: { global: {}, web: {}, node: {} },
 			htmlTemplate: await crossResolve(['index.ejs', 'assets/index.ejs']),
 			templateParameters: {},
+			htmlPluginOptions: {},
 			resolves: {},
 			webpackMiddlewares: [],
 			devMiddlewares: [],

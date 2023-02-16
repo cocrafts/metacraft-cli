@@ -21,5 +21,6 @@ export const generateHtmlPlugin = (
 		template: parsedConfigs.htmlTemplate,
 		templateParameters: params,
 		filename: 'index.html',
+		...parsedConfigs.htmlPluginOptions,
 	});
 };

@@ -31,6 +31,7 @@ interface CommonConfigs {
 	hotOptions?: HotOptions;
 	htmlTemplate?: string;
 	templateParameters?: Record<string, any>;
+	htmlPluginOptions?: Record<string, any>;
 	moduleAlias?: ModuleAlias;
 	resolves?: Record<string, string>;
 	buildId?: () => string;
