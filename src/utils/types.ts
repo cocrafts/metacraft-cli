@@ -37,6 +37,7 @@ interface CommonConfigs {
 	buildId?: () => string;
 	useBabel?: boolean;
 	useReact?: boolean;
+	withProgress?: boolean;
 }
 
 export type MetacraftConfigs = CommonConfigs & {

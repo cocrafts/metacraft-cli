@@ -22,6 +22,7 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 		publicPath,
 		moduleAlias,
 		useReact,
+		withProgress,
 	} = parsedConfigs;
 	const { webpack, TerserPlugin, CssExtractPlugin, ReactRefreshPlugin } =
 		internal.modules;
@@ -137,7 +138,7 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 				'process.env.NODE_ENV': JSON.stringify(env),
 			}),
 			generateHtmlPlugin(internal, parsedConfigs),
-			generateProgressPlugin(internal, parsedConfigs),
+			withProgress && generateProgressPlugin(internal, parsedConfigs),
 			new CssExtractPlugin(),
 			...conditionalPlugins,
 		],

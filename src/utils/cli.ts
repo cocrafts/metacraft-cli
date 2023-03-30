@@ -89,6 +89,7 @@ export const extractInternals = async (): Promise<MetacraftInternals> => {
 			devMiddlewares: [],
 			useBabel: false,
 			useReact: !!packageJson?.dependencies?.react,
+			withProgress: true,
 		} as MetacraftConfigs,
 		projectConfigs,
 	);
