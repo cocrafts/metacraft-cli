@@ -59,6 +59,10 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 		conditionalPlugins.push(new ReactRefreshPlugin());
 	}
 
+	if (withProgress) {
+		conditionalPlugins.push(generateProgressPlugin(internal, parsedConfigs));
+	}
+
 	return {
 		context: process.cwd(),
 		stats: merge(runStats, stats),
@@ -138,7 +142,6 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 				'process.env.NODE_ENV': JSON.stringify(env),
 			}),
 			generateHtmlPlugin(internal, parsedConfigs),
-			withProgress && generateProgressPlugin(internal, parsedConfigs),
 			new CssExtractPlugin(),
 			...conditionalPlugins,
 		],
