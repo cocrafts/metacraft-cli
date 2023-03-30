@@ -3,7 +3,7 @@ import { resolve } from 'path';
 import { merge } from 'lodash';
 import { generateHtmlPlugin } from 'plugins/html';
 import { generateProgressPlugin } from 'plugins/progress';
-import { devEntries, guessEntry, parseConfigs } from 'utils/cli';
+import { devEntries, guessEntry, parseConfigs, styleEntries } from 'utils/cli';
 import { crossResolve } from 'utils/modules';
 import { WebpackMiddleware } from 'utils/types';
 import { getJsRule } from 'utils/webpack';
@@ -29,7 +29,7 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 	const innerModuleUri = resolve(__dirname, 'node_modules');
 	const shareModuleUri = resolve(__dirname, '../../'); /* yarn globals */
 	const appEntries = [
-		await crossResolve(['style.sass', 'assets/style.sass']),
+		await crossResolve(styleEntries),
 		await guessEntry(devEntries),
 	];
 	const devUri = await crossResolve(

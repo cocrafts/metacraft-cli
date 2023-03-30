@@ -98,6 +98,15 @@ export const extractInternals = async (): Promise<MetacraftInternals> => {
 
 const configEntry = 'metacraft.config.js';
 
+export const styleEntries = [
+	'style.css',
+	'assets/style.css',
+	'style.scss',
+	'assets/style.scss',
+	'style.sass',
+	'assets/style.sass',
+];
+
 export const devEntries = [
 	'index.web.js',
 	'index.js',
