@@ -111,11 +111,16 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 				jsRule,
 				{
 					test: /\.s[ac]ss$/i,
-					use: [CssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+					use: [
+						CssExtractPlugin.loader,
+						'css-loader',
+						'postcss-loader',
+						'sass-loader',
+					],
 				},
 				{
 					test: /\.css$/,
-					use: [CssExtractPlugin.loader, 'css-loader'],
+					use: [CssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
 				},
 				{
 					test: /\.(png|jpg|svg|ttf)$/,

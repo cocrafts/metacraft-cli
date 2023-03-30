@@ -1,6 +1,6 @@
 {
   "name": "@metacraft/cli",
-  "version": "0.0.62",
+  "version": "0.0.64",
   "description": "lightning fast development/boilerplate tool for javascript/node.js",
   "author": "stormgate.io",
   "bin": {
@@ -9,7 +9,7 @@
   "files": [
     "assets/**/*",
     "!assets/templates/**/node_module",
-		"wasm/pkg/**/*",
+    "wasm/pkg/**/*",
     "bundle.js",
     "server.js",
     "cli.js"
@@ -48,6 +48,8 @@
     "invalidate-module": "^1.0.0",
     "lodash": "^4.17.21",
     "mini-css-extract-plugin": "^2.7.2",
+    "postcss": "^8.4.21",
+    "postcss-loader": "^7.0.2",
     "progress-bar-webpack-plugin": "^2.1.0",
     "react-refresh": "^0.14.0",
     "regenerator-runtime": "^0.13.11",
