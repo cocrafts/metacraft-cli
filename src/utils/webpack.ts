@@ -36,7 +36,6 @@ export const getSwcRule = async ({
 	if (useReact) {
 		options.jsc.transform.react = {
 			runtime: 'automatic',
-			useBuiltins: true,
 			development: !isProduction,
 			refresh: !isProduction,
 		};
