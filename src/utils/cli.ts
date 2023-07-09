@@ -19,6 +19,18 @@ export const guessEntry = async (
 	}
 };
 
+export const guessEnvironmentEntry = async (
+	isProduction: boolean,
+): Promise<string> => {
+	const entries = isProduction ? envEntries.production : envEntries.development;
+
+	for (const entry of entries) {
+		if (await exists(entry)) {
+			return entry;
+		}
+	}
+};
+
 export const parseConfigs = (
 	configs: MetacraftConfigs,
 	args?,
@@ -123,3 +135,8 @@ export const nodeEntries = [
 	'server.ts',
 	'node.ts',
 ];
+
+export const envEntries = {
+	development: ['.env.development', '.env'],
+	production: ['.env.production', '.env'],
+};

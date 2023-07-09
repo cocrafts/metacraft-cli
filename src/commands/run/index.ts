@@ -3,7 +3,12 @@ import {
 	launchDevIfPossible,
 	launchNodeIfPossible,
 } from 'commands/run/launcher';
-import { extractInternals, parseConfigs } from 'utils/cli';
+import { config as loadEnvironmentVariables } from 'dotenv';
+import {
+	extractInternals,
+	guessEnvironmentEntry,
+	parseConfigs,
+} from 'utils/cli';
 import { type CommandModule } from 'yargs';
 
 const module: CommandModule = {
@@ -12,6 +17,9 @@ const module: CommandModule = {
 	describe: 'Launch development server(s)',
 	builder: (yargs) => yargs.default('p', 3000),
 	handler: async (args) => {
+		const envEntry = await guessEnvironmentEntry(false);
+		loadEnvironmentVariables({ path: envEntry });
+
 		const internal = await extractInternals();
 		const { logger } = internal.modules;
 		const parsedConfigs = parseConfigs(internal.configs, args);

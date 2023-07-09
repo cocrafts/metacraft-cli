@@ -1,8 +1,8 @@
 {
   "name": "@metacraft/cli",
-  "version": "0.0.68",
+  "version": "0.0.71",
   "description": "lightning fast development/boilerplate tool for javascript/node.js",
-  "author": "stormgate.io",
+  "author": "Walless Tribe",
   "bin": {
     "metacraft": "cli.js"
   },
@@ -42,6 +42,7 @@
     "chalk": "^4.1.2",
     "chokidar": "^3.5.3",
     "css-loader": "^6.7.3",
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.0",

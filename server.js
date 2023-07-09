@@ -1,4 +1,5 @@
 require('@swc/register');
+require('dotenv').config();
 
 const { createServer } = require('http');
 const { resolve, relative } = require('path');

@@ -1,5 +1,10 @@
 import { guessEntries } from 'commands/run/internal';
-import { extractInternals, parseConfigs } from 'utils/cli';
+import { config as loadEnvironmentVariables } from 'dotenv';
+import {
+	extractInternals,
+	guessEnvironmentEntry,
+	parseConfigs,
+} from 'utils/cli';
 import { CommandModule, Options } from 'yargs';
 
 import { generateBundle } from './bundler';
@@ -16,6 +21,8 @@ const module: CommandModule = {
 	handler: async (args) => {
 		global.setEnv('ENV', args.e);
 		global.setEnv('NODE_ENV', args.e);
+		const envEntry = await guessEnvironmentEntry(false);
+		loadEnvironmentVariables({ path: envEntry });
 
 		const internal = await extractInternals();
 		const parsedConfigs = parseConfigs(internal.configs, args);
