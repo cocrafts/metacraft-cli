@@ -21,7 +21,7 @@ const module: CommandModule = {
 	handler: async (args) => {
 		global.setEnv('ENV', args.e);
 		global.setEnv('NODE_ENV', args.e);
-		const envEntry = await guessEnvironmentEntry(false);
+		const envEntry = await guessEnvironmentEntry(true);
 		loadEnvironmentVariables({ path: envEntry });
 
 		const internal = await extractInternals();
