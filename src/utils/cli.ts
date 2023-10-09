@@ -48,6 +48,7 @@ export const parseConfigs = (
 		serverPort: configs.serverPort(args?.serverPort),
 		host: configs.host(args?.host),
 		stats: configs.stats(isProduction, env),
+		esBuildOptions: configs.esBuildOptions(isProduction, env),
 		swcOptions: configs.swcOptions(isProduction, env),
 		keepPreviousBuild: configs.keepPreviousBuild(isProduction),
 	};
@@ -67,6 +68,7 @@ export const extractInternals = async (): Promise<MetacraftInternals> => {
 			HtmlPlugin: 'node_modules/html-webpack-plugin',
 			TerserPlugin: 'node_modules/terser-webpack-plugin',
 			CssExtractPlugin: 'node_modules/mini-css-extract-plugin',
+			TsconfigPathsPlugin: 'node_modules/tsconfig-paths-webpack-plugin',
 			ReactRefreshPlugin: 'node_modules/@pmmmwh/react-refresh-webpack-plugin',
 			DevServer: 'node_modules/webpack-dev-server',
 		},
@@ -89,6 +91,7 @@ export const extractInternals = async (): Promise<MetacraftInternals> => {
 			serverPort: (cliDefault) => process.env.PORT || cliDefault || 3005,
 			host: (cliDefault) => process.env.HOST || cliDefault || 'localhost',
 			stats: () => ({}),
+			esBuildOptions: () => ({}),
 			swcOptions: () => ({}),
 			keepPreviousBuild: () => false,
 			buildId: uuid,

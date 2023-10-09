@@ -24,7 +24,7 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 		useReact,
 		withProgress,
 	} = parsedConfigs;
-	const { webpack, TerserPlugin, CssExtractPlugin, ReactRefreshPlugin } =
+	const { webpack, TerserPlugin, CssExtractPlugin, ReactRefreshPlugin, TsconfigPathsPlugin } =
 		internal.modules;
 	const uniqueId = buildId();
 	const innerModuleUri = resolve(__dirname, 'node_modules');
@@ -98,6 +98,7 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 			mainFields: ['browser', 'main', 'module'],
 			alias: { ...moduleAlias.global, ...moduleAlias.web },
 			modules: [process.cwd(), 'node_modules'],
+			plugins: [new TsconfigPathsPlugin()],
 			extensions: [
 				'.web.js',
 				'.js',

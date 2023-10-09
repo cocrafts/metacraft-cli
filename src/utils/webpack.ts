@@ -1,20 +1,47 @@
-import { RuleSetRule } from 'webpack';
-import { Options as SwcOptions } from '@swc/core';
+import type { RuleSetRule } from 'webpack';
+import type { Options as SwcOptions } from '@swc/core';
+import type { EsbuildPluginOptions } from 'esbuild-loader';
 import { merge } from 'lodash';
 
 import { crossResolve } from './modules';
-import { ParsedConfigs } from './types';
+import type { ParsedConfigs } from './types';
 
 export const getJsRule = async (
 	parsedConfigs: ParsedConfigs,
 ): Promise<RuleSetRule> => {
-	const { useBabel } = parsedConfigs;
+	const { compiler } = parsedConfigs;
 
-	if (useBabel) {
-		return getBabelLoader(parsedConfigs);
-	} else {
-		return getSwcRule(parsedConfigs);
+	switch (compiler) {
+		case 'esbuild':
+			return getEsBuildRule(parsedConfigs);
+		case 'swc':
+			return getSwcRule(parsedConfigs);
+		default:
+			return getBabelRule(parsedConfigs);
 	}
+};
+
+export const getEsBuildRule = async ({
+	isProduction,
+	esBuildOptions,
+	useReact,
+}: ParsedConfigs): Promise<RuleSetRule> => {
+	const options: EsbuildPluginOptions = {
+		loader: 'ts',
+		minify: isProduction,
+		target: ['es2022'],
+	};
+
+	if (useReact) {
+		options.loader = 'tsx';
+		options.jsx = 'automatic';
+	}
+
+	return {
+		test: /\.(ts|js)x?$/,
+		loader: 'esbuild-loader',
+		options: merge(options, esBuildOptions),
+	};
 };
 
 export const getSwcRule = async ({
@@ -48,7 +75,7 @@ export const getSwcRule = async ({
 	};
 };
 
-export const getBabelLoader = async ({
+export const getBabelRule = async ({
 	isProduction,
 	useReact,
 }: ParsedConfigs): Promise<RuleSetRule> => {

@@ -1,6 +1,7 @@
 import type { Configuration, StatsOptions } from 'webpack';
 import type { Configuration as DevConfiguration } from 'webpack-dev-server';
 import { Options as SwcOptions } from '@swc/core';
+import { EsbuildPluginOptions as EsBuildOptions } from 'esbuild-loader';
 import type { Express } from 'express';
 
 export interface ModuleAlias {
@@ -36,6 +37,7 @@ interface CommonConfigs {
 	resolves?: Record<string, string>;
 	buildId?: () => string;
 	useBabel?: boolean;
+	compiler?: 'babel' | 'swc' | 'esbuild';
 	useReact?: boolean;
 	withProgress?: boolean;
 }
@@ -49,6 +51,7 @@ export type MetacraftConfigs = CommonConfigs & {
 	port?: (cliDefault: string) => string | number;
 	serverPort?: (cliDefault: string) => string | number;
 	stats?: (isProd: boolean, env: string) => StatsOptions;
+	esBuildOptions?: (isProd: boolean, env: string) => EsBuildOptions;
 	swcOptions?: (isProd: boolean, env: string) => SwcOptions;
 	keepPreviousBuild?: (isProd: boolean) => boolean;
 	buildCleanUp?: (idProd: boolean, env: string) => void;
@@ -63,6 +66,7 @@ export type ParsedConfigs = CommonConfigs & {
 	port: string | number;
 	serverPort: string | number;
 	stats: StatsOptions;
+	esBuildOptions: EsBuildOptions;
 	swcOptions: SwcOptions;
 	keepPreviousBuild: boolean;
 };
@@ -87,6 +91,7 @@ export interface MetacraftModules {
 	HtmlPlugin?: any;
 	TerserPlugin?: any;
 	CssExtractPlugin?: any;
+	TsconfigPathsPlugin?: any;
 	ReactRefreshPlugin?: any;
 	DevServer?: any;
 	logger?: MetacraftLogger;
