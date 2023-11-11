@@ -12,12 +12,12 @@ export const getJsRule = async (
 	const { compiler } = parsedConfigs;
 
 	switch (compiler) {
-		case 'esbuild':
-			return getEsBuildRule(parsedConfigs);
+		case 'babel':
+			return getBabelRule(parsedConfigs);
 		case 'swc':
 			return getSwcRule(parsedConfigs);
 		default:
-			return getBabelRule(parsedConfigs);
+			return getEsBuildRule(parsedConfigs);
 	}
 };
 
