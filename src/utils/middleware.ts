@@ -27,7 +27,7 @@ export const combineMiddlewares = async <
 		if (nextConfig) {
 			config = nextConfig;
 		} else {
-			break;
+			continue;
 		}
 	}
 
