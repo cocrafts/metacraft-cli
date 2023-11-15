@@ -11,14 +11,15 @@ export const getJsRule = async (
 ): Promise<RuleSetRule> => {
 	const { compiler } = parsedConfigs;
 
-	switch (compiler) {
-		case 'babel':
-			return getBabelRule(parsedConfigs);
-		case 'swc':
-			return getSwcRule(parsedConfigs);
-		default:
-			return getEsBuildRule(parsedConfigs);
+	if (compiler === 'babel') {
+		return getBabelRule(parsedConfigs);
 	}
+
+	if (compiler === 'swc' || parsedConfigs.swcOptions) {
+		return getSwcRule(parsedConfigs);
+	}
+
+	return getEsBuildRule(parsedConfigs);
 };
 
 export const getEsBuildRule = async ({
