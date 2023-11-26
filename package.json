@@ -1,6 +1,6 @@
 {
   "name": "@metacraft/cli",
-  "version": "0.0.75",
+  "version": "0.0.77",
   "description": "lightning fast development/boilerplate tool for javascript/node.js",
   "author": "Walless Tribe",
   "bin": {
@@ -45,6 +45,7 @@
     "dotenv": "^16.3.1",
     "esbuild": "^0.19.4",
     "esbuild-loader": "^4.0.2",
+    "esbuild-register": "^3.5.0",
     "express": "^4.18.2",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.3",

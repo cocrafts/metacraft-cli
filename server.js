@@ -1,4 +1,4 @@
-require('@swc/register');
+require('esbuild-register/dist/node').register();
 require('dotenv').config();
 
 const { createServer } = require('http');
