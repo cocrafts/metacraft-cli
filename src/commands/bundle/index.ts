@@ -7,7 +7,7 @@ import {
 } from 'utils/cli';
 import { CommandModule, Options } from 'yargs';
 
-import { generateBundle } from './bundler';
+import { bundleNodeBuild, bundleWebBuild } from './bundler';
 
 const module: CommandModule = {
 	command: 'bundle',
@@ -27,10 +27,17 @@ const module: CommandModule = {
 		const internal = await extractInternals();
 		const parsedConfigs = parseConfigs(internal.configs, args);
 		const { logger } = internal.modules;
-		const { webEntry } = await guessEntries(logger);
+		const { webEntry, nodeEntry } = await guessEntries(logger);
 
-		await generateBundle({
+		await bundleWebBuild({
 			entry: webEntry,
+			logger,
+			internal,
+			parsedConfigs,
+		});
+
+		await bundleNodeBuild({
+			entry: nodeEntry,
 			logger,
 			internal,
 			parsedConfigs,

@@ -24,8 +24,13 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 		useReact,
 		withProgress,
 	} = parsedConfigs;
-	const { webpack, TerserPlugin, CssExtractPlugin, ReactRefreshPlugin, TsconfigPathsPlugin } =
-		internal.modules;
+	const {
+		webpack,
+		TerserPlugin,
+		CssExtractPlugin,
+		ReactRefreshPlugin,
+		TsconfigPathsPlugin,
+	} = internal.modules;
 	const uniqueId = buildId();
 	const innerModuleUri = resolve(__dirname, 'node_modules');
 	const shareModuleUri = resolve(__dirname, '../../'); /* yarn globals */

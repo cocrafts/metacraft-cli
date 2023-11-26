@@ -1,4 +1,7 @@
+import { promises as fs } from 'fs';
+
 import { Configuration } from 'webpack';
+import { build, BuildResult, PluginBuild } from 'esbuild';
 import { bareWebpackMiddleware as bare } from 'middlewares/webpack';
 import { combineMiddlewares } from 'utils/middleware';
 import {
@@ -15,7 +18,7 @@ interface BundleArgs {
 	parsedConfigs?: ParsedConfigs;
 }
 
-export const generateBundle = async ({
+export const bundleWebBuild = async ({
 	entry,
 	logger,
 	internal,
@@ -32,11 +35,42 @@ export const generateBundle = async ({
 	>({ internal, middlewares });
 	const compiler = webpack(config);
 
-	compiler.run((err) => {
+	compiler.run((err: Error) => {
 		if (err) {
 			console.log(err);
 		} else {
 			logger.bundleComplete(parsedConfigs);
 		}
 	});
+};
+
+const prependScript = `require('dotenv').config();\n`;
+const prependCodePlugin = (code: string) => ({
+	name: 'prepend-code',
+	setup(build: PluginBuild) {
+		build.onEnd(async (result: BuildResult) => {
+			if (result.errors.length === 0) {
+				const outputPath = build.initialOptions.outfile;
+				const originalBundle = await fs.readFile(outputPath, 'utf8');
+				await fs.writeFile(outputPath, `${code}\n${originalBundle}`);
+			}
+		});
+	},
+});
+
+export const bundleNodeBuild = async ({ entry }: BundleArgs): Promise<void> => {
+	if (!entry) return;
+
+	try {
+		await build({
+			entryPoints: [entry],
+			bundle: true,
+			platform: 'node',
+			packages: 'external',
+			outfile: `metacraft/${entry.replace('.ts', '.js')}`,
+			plugins: [prependCodePlugin(prependScript)],
+		});
+	} catch (e) {
+		console.log('Server build failed', e);
+	} 
 };

@@ -49,3 +49,7 @@ export const crossResolve = async (
 ): Promise<string> => {
 	return (await crossRequire(id, fallback, nodeRequire.resolve)) || fallback;
 };
+
+export const isPackageInstalled = (id: string) => {
+	return exists(resolve(process.cwd(), 'node_modules', id))
+};

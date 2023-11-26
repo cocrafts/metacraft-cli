@@ -1,6 +1,6 @@
 {
   "name": "@metacraft/cli",
-  "version": "0.0.77",
+  "version": "0.0.78",
   "description": "lightning fast development/boilerplate tool for javascript/node.js",
   "author": "Walless Tribe",
   "bin": {
