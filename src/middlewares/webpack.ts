@@ -4,7 +4,7 @@ import { merge } from 'lodash';
 import { generateHtmlPlugin } from 'plugins/html';
 import { generateProgressPlugin } from 'plugins/progress';
 import { devEntries, guessEntry, parseConfigs, styleEntries } from 'utils/cli';
-import { crossResolve } from 'utils/modules';
+import { crossRequire, crossResolve, isPackageDeclared } from 'utils/modules';
 import { WebpackMiddleware } from 'utils/types';
 import { getJsRule } from 'utils/webpack';
 
@@ -31,6 +31,8 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 		ReactRefreshPlugin,
 		TsconfigPathsPlugin,
 	} = internal.modules;
+	const isReactDeclared = await isPackageDeclared('react');
+	const isReactUsed = isReactDeclared || useReact;
 	const uniqueId = buildId();
 	const innerModuleUri = resolve(__dirname, 'node_modules');
 	const shareModuleUri = resolve(__dirname, '../../'); /* yarn globals */
@@ -60,7 +62,7 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 		// TODO: work with build.json
 	}
 
-	if (useReact && !isProduction) {
+	if (isReactUsed && !isProduction) {
 		conditionalPlugins.push(new ReactRefreshPlugin());
 	}
 

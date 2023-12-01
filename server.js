@@ -1,5 +1,5 @@
 require('esbuild-register/dist/node').register();
-require('dotenv').config();
+require('./server.injection');
 
 const { createServer } = require('http');
 const { resolve, relative } = require('path');

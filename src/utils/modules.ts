@@ -1,3 +1,4 @@
+import { createPublicKey } from 'crypto';
 import { access, constants } from 'fs';
 import { resolve } from 'path';
 
@@ -50,6 +51,19 @@ export const crossResolve = async (
 	return (await crossRequire(id, fallback, nodeRequire.resolve)) || fallback;
 };
 
-export const isPackageInstalled = (id: string) => {
-	return exists(resolve(process.cwd(), 'node_modules', id));
+export const isPackageDeclared = async (id: string) => {
+	const packageJsonUri = resolve(process.cwd(), 'package.json');
+	const packageJsonExists = await exists(packageJsonUri);
+
+	if (packageJsonExists) {
+		const packageJson = nodeRequire(packageJsonUri);
+
+		for (const key of ['dependencies', 'devDependencies', 'peerDependencies']) {
+			if (packageJson[key]?.[id]) {
+				return true;
+			}
+		}
+	}
+
+	return false;
 };

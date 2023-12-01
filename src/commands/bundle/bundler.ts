@@ -4,7 +4,7 @@ import { Configuration } from 'webpack';
 import { build, BuildResult, PluginBuild } from 'esbuild';
 import { bareWebpackMiddleware as bare } from 'middlewares/webpack';
 import { combineMiddlewares } from 'utils/middleware';
-import { isPackageInstalled } from 'utils/modules';
+import { isPackageDeclared } from 'utils/modules';
 import {
 	MetacraftInternals,
 	MetacraftLogger,
@@ -51,7 +51,7 @@ const prependCodePlugin = (code: string) => ({
 	setup(build: PluginBuild) {
 		build.onEnd(async (result: BuildResult) => {
 			if (result.errors.length === 0) {
-				const isDotenvAvailable = await isPackageInstalled('dotenv');
+				const isDotenvAvailable = await isPackageDeclared('dotenv');
 				const outputPath = build.initialOptions.outfile;
 				const originalBundle = await fs.readFile(outputPath, 'utf8');
 
