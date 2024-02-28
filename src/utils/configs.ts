@@ -31,7 +31,7 @@ export const options: Record<string, Options> = {
 	},
 };
 
-export type MetacraftOptions = {
+export type RootOptions = {
 	port?: number;
 	host?: string;
 	devOnly?: boolean;

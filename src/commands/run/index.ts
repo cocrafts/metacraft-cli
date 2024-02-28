@@ -9,10 +9,10 @@ import {
 	guessEnvironmentEntry,
 	parseConfigs,
 } from 'utils/cli';
-import { MetacraftOptions } from 'utils/configs';
+import { RootOptions } from 'utils/configs';
 import { type CommandModule, Options } from 'yargs';
 
-type RunOptions = MetacraftOptions & { e?: string };
+type RunOptions = RootOptions & { e?: string };
 
 const module: CommandModule<object, RunOptions> = {
 	command: '$0',

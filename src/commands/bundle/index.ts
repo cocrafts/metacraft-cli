@@ -5,12 +5,12 @@ import {
 	guessEnvironmentEntry,
 	parseConfigs,
 } from 'utils/cli';
-import { MetacraftOptions } from 'utils/configs';
+import { RootOptions } from 'utils/configs';
 import { CommandModule, Options } from 'yargs';
 
 import { bundleNodeBuild, bundleWebBuild } from './bundler';
 
-const module: CommandModule<object, MetacraftOptions> = {
+const module: CommandModule<object, RootOptions> = {
 	command: 'bundle',
 	aliases: ['build', 'compile'],
 	describe: 'Build production bundle',
