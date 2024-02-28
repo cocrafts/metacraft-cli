@@ -25,7 +25,7 @@ export const options: Record<string, Options> = {
 	},
 	ef: {
 		description:
-			"Force load env file, by default we use '.env.development' for run, and '.env.production' for build",
+			"Force load env file, by default we use '.env.development' for run command, and '.env.production' for build command",
 		alias: 'envFile',
 		type: 'string',
 	},
