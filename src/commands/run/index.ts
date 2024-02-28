@@ -23,7 +23,7 @@ const module: CommandModule<object, RunOptions> = {
 		global.setEnv('ENV', args.e);
 		global.setEnv('NODE_ENV', args.e);
 
-		if (args.env) {
+		if (args.envFile) {
 			loadEnvironmentVariables({ path: args.envFile });
 		} else {
 			const envEntry = await guessEnvironmentEntry(false);
