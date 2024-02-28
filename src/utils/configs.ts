@@ -1,4 +1,4 @@
-import type { Options } from 'yargs';
+import { type Options } from 'yargs';
 
 export const options: Record<string, Options> = {
 	p: {
@@ -23,4 +23,17 @@ export const options: Record<string, Options> = {
 		alias: 'devOnly',
 		type: 'boolean',
 	},
+	ef: {
+		description:
+			"Force load env file, by default we use '.env.development' for run command, and '.env.production' for build command",
+		alias: 'envFile',
+		type: 'string',
+	},
+};
+
+export type RootOptions = {
+	port?: number;
+	host?: string;
+	devOnly?: boolean;
+	envFile?: string;
 };

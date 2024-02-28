@@ -5,11 +5,12 @@ import {
 	guessEnvironmentEntry,
 	parseConfigs,
 } from 'utils/cli';
+import { RootOptions } from 'utils/configs';
 import { CommandModule, Options } from 'yargs';
 
 import { bundleNodeBuild, bundleWebBuild } from './bundler';
 
-const module: CommandModule = {
+const module: CommandModule<object, RootOptions> = {
 	command: 'bundle',
 	aliases: ['build', 'compile'],
 	describe: 'Build production bundle',
@@ -21,8 +22,13 @@ const module: CommandModule = {
 	handler: async (args) => {
 		global.setEnv('ENV', args.e);
 		global.setEnv('NODE_ENV', args.e);
-		const envEntry = await guessEnvironmentEntry(true);
-		loadEnvironmentVariables({ path: envEntry });
+
+		if (args.env) {
+			loadEnvironmentVariables({ path: args.envFile });
+		} else {
+			const envEntry = await guessEnvironmentEntry(true);
+			loadEnvironmentVariables({ path: envEntry });
+		}
 
 		const internal = await extractInternals();
 		const parsedConfigs = parseConfigs(internal.configs, args);

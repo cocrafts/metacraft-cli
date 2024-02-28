@@ -9,16 +9,26 @@ import {
 	guessEnvironmentEntry,
 	parseConfigs,
 } from 'utils/cli';
-import { type CommandModule } from 'yargs';
+import { RootOptions } from 'utils/configs';
+import { type CommandModule, Options } from 'yargs';
 
-const module: CommandModule = {
+type RunOptions = RootOptions & { e?: string };
+
+const module: CommandModule<object, RunOptions> = {
 	command: '$0',
 	aliases: ['dev'],
 	describe: 'Launch development server(s)',
-	builder: (yargs) => yargs.default('p', 3000),
+	builder: (yargs) => yargs.default('p', 3000).options(runOptions),
 	handler: async (args) => {
-		const envEntry = await guessEnvironmentEntry(false);
-		loadEnvironmentVariables({ path: envEntry });
+		global.setEnv('ENV', args.e);
+		global.setEnv('NODE_ENV', args.e);
+
+		if (args.env) {
+			loadEnvironmentVariables({ path: args.envFile });
+		} else {
+			const envEntry = await guessEnvironmentEntry(false);
+			loadEnvironmentVariables({ path: envEntry });
+		}
 
 		const internal = await extractInternals();
 		const { logger } = internal.modules;
@@ -44,3 +54,12 @@ const module: CommandModule = {
 };
 
 export default module;
+
+const runOptions = {
+	environment: {
+		alias: 'e',
+		type: 'string',
+		default: 'development',
+		describe: 'Build environment',
+	} as Options,
+};
