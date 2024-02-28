@@ -9,16 +9,21 @@ import {
 	guessEnvironmentEntry,
 	parseConfigs,
 } from 'utils/cli';
+import { MetacraftOptions } from 'utils/configs';
 import { type CommandModule } from 'yargs';
 
-const module: CommandModule = {
+const module: CommandModule<object, MetacraftOptions> = {
 	command: '$0',
 	aliases: ['dev'],
 	describe: 'Launch development server(s)',
 	builder: (yargs) => yargs.default('p', 3000),
 	handler: async (args) => {
-		const envEntry = await guessEnvironmentEntry(false);
-		loadEnvironmentVariables({ path: envEntry });
+		if (args.env) {
+			loadEnvironmentVariables({ path: args.envFile });
+		} else {
+			const envEntry = await guessEnvironmentEntry(false);
+			loadEnvironmentVariables({ path: envEntry });
+		}
 
 		const internal = await extractInternals();
 		const { logger } = internal.modules;
