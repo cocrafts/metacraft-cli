@@ -17,27 +17,19 @@ interface LaunchArgs {
 	parsedConfigs?: ParsedConfigs;
 }
 
+const packageJson = global.packageJson;
+
 export const launchNodeIfPossible = async ({
 	entry,
 	logger,
 	parsedConfigs,
 }: LaunchArgs): Promise<void> => {
 	if (!entry) return;
-
 	logger.nodeDetected(entry, parsedConfigs);
-	logger.launchNodeServer(parsedConfigs);
-
-	try {
-		fork(resolve(__dirname, 'server.js'), [entry], {
-			cwd: process.cwd(),
-			stdio: 'inherit',
-		});
-	} catch (e) {
-		logger.launchNodeFailure(entry, parsedConfigs);
-	}
+	console.log('hmmm');
 };
 
-export const launchDevIfPossible = async ({
+export const launchWebIfPossible = async ({
 	entry,
 	logger,
 	internal,
@@ -47,6 +39,7 @@ export const launchDevIfPossible = async ({
 	const { devMiddlewares, webpackMiddlewares } = internal.configs;
 	const { webpack, DevServer } = internal.modules;
 
+	logger.greeting(packageJson.version);
 	logger.devDetected(entry, parsedConfigs);
 	logger.launchDevServer(parsedConfigs);
 
@@ -64,4 +57,27 @@ export const launchDevIfPossible = async ({
 	const devServer = new DevServer(devConfigs, compiler);
 
 	devServer.start();
+	logger.listeningForChanges(parsedConfigs);
+};
+
+export const launchServerIfPossible = async ({
+	entry,
+	logger,
+	parsedConfigs,
+}: LaunchArgs): Promise<void> => {
+	if (!entry) return;
+
+	logger.greeting(packageJson.version);
+	logger.serverDetected(entry, parsedConfigs);
+	logger.launchServer(parsedConfigs);
+
+	try {
+		fork(resolve(__dirname, 'server.js'), [entry], {
+			cwd: process.cwd(),
+			stdio: 'inherit',
+		});
+		logger.listeningForChanges(parsedConfigs);
+	} catch (e) {
+		logger.launchNodeFailure(entry, parsedConfigs);
+	}
 };

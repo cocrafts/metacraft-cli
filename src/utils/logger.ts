@@ -16,18 +16,11 @@ export const defaultLogger = (chalk: any): MetacraftLogger => {
 			console.log(
 				red('No entry found! ') +
 					'you need at least one entry on the following list:\n' +
-					gray('[') +
-					green(allEntries) +
-					gray(']'),
+					gray(allEntries),
 			);
 		},
 		nodeDetected: (entry) => {
-			console.log(
-				blue(' • Node.js entry ') + yellow(entry) + gray(' detected..'),
-			);
-		},
-		launchNodeServer: (configs) => {
-			console.log(gray(' • launched ') + serverAddress(configs));
+			console.log(blue('Detected ') + yellow(entry) + gray('..'));
 		},
 		launchNodeFailure: (entry: string) => {
 			console.log(gray(mark) + red(' error launching server ') + green(entry));
@@ -39,6 +32,14 @@ export const defaultLogger = (chalk: any): MetacraftLogger => {
 		},
 		launchDevServer: (configs) => {
 			console.log(gray(' • launched ') + browserAddress(configs));
+		},
+		serverDetected: (entry: string) => {
+			console.log(
+				blue(' • Server entry ') + yellow(entry) + gray(' detected..'),
+			);
+		},
+		launchServer: (configs) => {
+			console.log(gray(' • launched ') + serverAddress(configs));
 		},
 		listeningForChanges: () => {
 			console.log(blue(' • ') + gray('listening for file changes...'));

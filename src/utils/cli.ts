@@ -123,20 +123,35 @@ export const styleEntries = [
 	'assets/style.sass',
 ];
 
-export const devEntries = [
-	'index.web.js',
+export const nodeEntries = [
 	'index.js',
 	'index.ts',
-	'index.web.ts',
+	'node.js',
+	'node.ts',
+	'index.node.js',
+	'index.node.ts',
+	'cli.js',
+	'cli.ts',
+	'index.cli.js',
+	'index.cli.ts',
 ];
 
-export const nodeEntries = [
-	'index.node.js',
+export const devEntries = [
+	'web.js',
+	'web.ts',
+	'index.web.js',
+	'index.web.ts',
+	'browser.js',
+	'browser.ts',
+	'index.browser.js',
+	'index.browser.ts',
+];
+
+export const serverEntries = [
 	'server.js',
-	'node.js',
-	'index.node.ts',
 	'server.ts',
-	'node.ts',
+	'index.server.js',
+	'index.server.ts',
 ];
 
 export const envEntries = {

@@ -1,7 +1,8 @@
 import { guessEntries } from 'commands/run/internal';
 import {
-	launchDevIfPossible,
 	launchNodeIfPossible,
+	launchServerIfPossible,
+	launchWebIfPossible,
 } from 'commands/run/launcher';
 import { config as loadEnvironmentVariables } from 'dotenv';
 import {
@@ -33,7 +34,7 @@ const module: CommandModule<object, RunOptions> = {
 		const internal = await extractInternals();
 		const { logger } = internal.modules;
 		const parsedConfigs = parseConfigs(internal.configs, args);
-		const { nodeEntry, webEntry } = await guessEntries(logger);
+		const { nodeEntry, webEntry, serverEntry } = await guessEntries(logger);
 
 		await launchNodeIfPossible({
 			entry: nodeEntry,
@@ -42,14 +43,19 @@ const module: CommandModule<object, RunOptions> = {
 			parsedConfigs,
 		});
 
-		await launchDevIfPossible({
+		await launchWebIfPossible({
 			entry: webEntry,
 			logger,
 			internal,
 			parsedConfigs,
 		});
 
-		logger.listeningForChanges(parsedConfigs);
+		await launchServerIfPossible({
+			entry: serverEntry,
+			logger,
+			internal,
+			parsedConfigs,
+		});
 	},
 };
 

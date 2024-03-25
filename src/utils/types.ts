@@ -75,10 +75,11 @@ export interface MetacraftLogger {
 	greeting: (version: string) => void;
 	noEntry: (availableEntries: string) => void;
 	nodeDetected: (entry: string, configs: ParsedConfigs) => void;
-	launchNodeServer: (configs: ParsedConfigs) => void;
 	launchNodeFailure: (entry: string, configs: ParsedConfigs) => void;
 	devDetected: (entry: string, configs: ParsedConfigs) => void;
 	launchDevServer: (configs: ParsedConfigs) => void;
+	serverDetected: (entry: string, configs: ParsedConfigs) => void;
+	launchServer: (configs: ParsedConfigs) => void;
 	listeningForChanges: (configs: ParsedConfigs) => void;
 	bundleComplete: (configs: ParsedConfigs) => void;
 }
