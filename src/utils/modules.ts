@@ -1,4 +1,3 @@
-import { createPublicKey } from 'crypto';
 import { access, constants } from 'fs';
 import { resolve } from 'path';
 
