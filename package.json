@@ -1,6 +1,6 @@
 {
   "name": "@metacraft/cli",
-  "version": "0.0.88",
+  "version": "0.0.89",
   "description": "lightning fast development/boilerplate tool for javascript/node.js",
   "author": "Walless Tribe",
   "bin": {
@@ -11,8 +11,9 @@
     "!assets/templates/**/node_module",
     "wasm/pkg/**/*",
     "bundle.js",
+    "node.js",
     "server.js",
-    "server.injection.js",
+    "injection.js",
     "cli.js"
   ],
   "scripts": {

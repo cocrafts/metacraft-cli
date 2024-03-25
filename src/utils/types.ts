@@ -80,6 +80,7 @@ export interface MetacraftLogger {
 	launchDevServer: (configs: ParsedConfigs) => void;
 	serverDetected: (entry: string, configs: ParsedConfigs) => void;
 	launchServer: (configs: ParsedConfigs) => void;
+	launchServerFailure: (entry: string, configs: ParsedConfigs) => void;
 	listeningForChanges: (configs: ParsedConfigs) => void;
 	bundleComplete: (configs: ParsedConfigs) => void;
 }

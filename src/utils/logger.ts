@@ -23,7 +23,7 @@ export const defaultLogger = (chalk: any): MetacraftLogger => {
 			console.log(blue('Detected ') + yellow(entry) + gray('..'));
 		},
 		launchNodeFailure: (entry: string) => {
-			console.log(gray(mark) + red(' error launching server ') + green(entry));
+			console.log(gray(mark) + red(' error launching ') + green(entry));
 		},
 		devDetected: (entry: string) => {
 			console.log(
@@ -40,6 +40,9 @@ export const defaultLogger = (chalk: any): MetacraftLogger => {
 		},
 		launchServer: (configs) => {
 			console.log(gray(' • launched ') + serverAddress(configs));
+		},
+		launchServerFailure: (entry: string) => {
+			console.log(gray(mark) + red(' error launching server ') + green(entry));
 		},
 		listeningForChanges: () => {
 			console.log(blue(' • ') + gray('listening for file changes...'));

@@ -26,7 +26,15 @@ export const launchNodeIfPossible = async ({
 }: LaunchArgs): Promise<void> => {
 	if (!entry) return;
 	logger.nodeDetected(entry, parsedConfigs);
-	console.log('hmmm');
+
+	try {
+		fork(resolve(__dirname, 'node.js'), [...process.argv.slice(2), entry], {
+			cwd: process.cwd(),
+			stdio: 'inherit',
+		});
+	} catch (e) {
+		logger.launchNodeFailure(entry, parsedConfigs);
+	}
 };
 
 export const launchWebIfPossible = async ({

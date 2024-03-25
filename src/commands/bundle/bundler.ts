@@ -78,6 +78,6 @@ export const bundleNodeBuild = async ({ entry }: BundleArgs): Promise<void> => {
 			plugins: [prependCodePlugin(prependScript)],
 		});
 	} catch (e) {
-		console.log('Server build failed', e);
+		console.log('Node build failed', e);
 	}
 };

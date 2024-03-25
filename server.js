@@ -1,5 +1,5 @@
 require('esbuild-register/dist/node').register();
-require('./server.injection');
+require('./injection');
 
 const { createServer } = require('http');
 const { resolve, relative } = require('path');

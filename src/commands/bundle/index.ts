@@ -33,7 +33,14 @@ const module: CommandModule<object, RootOptions> = {
 		const internal = await extractInternals();
 		const parsedConfigs = parseConfigs(internal.configs, args);
 		const { logger } = internal.modules;
-		const { webEntry, nodeEntry } = await guessEntries(logger);
+		const { webEntry, nodeEntry, serverEntry } = await guessEntries(logger);
+
+		await bundleNodeBuild({
+			entry: nodeEntry,
+			logger,
+			internal,
+			parsedConfigs,
+		});
 
 		await bundleWebBuild({
 			entry: webEntry,
@@ -43,7 +50,7 @@ const module: CommandModule<object, RootOptions> = {
 		});
 
 		await bundleNodeBuild({
-			entry: nodeEntry,
+			entry: serverEntry,
 			logger,
 			internal,
 			parsedConfigs,
