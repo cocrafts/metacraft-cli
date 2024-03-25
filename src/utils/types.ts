@@ -12,11 +12,11 @@ export interface ModuleAlias {
 
 export type WebpackMiddleware = (
 	configs: Configuration,
-	internal: MetacraftInternals,
+	internal: ParsedMetacraftInternals,
 ) => Promise<Configuration>;
 export type DevMiddleware = (
 	configs: DevConfiguration,
-	internal: MetacraftInternals,
+	internal: ParsedMetacraftInternals,
 ) => Promise<DevConfiguration>;
 
 export interface HotOptions {
@@ -101,5 +101,10 @@ export interface MetacraftModules {
 
 export interface MetacraftInternals {
 	configs: MetacraftConfigs;
+	modules: MetacraftModules;
+}
+
+export interface ParsedMetacraftInternals {
+	configs: ParsedConfigs;
 	modules: MetacraftModules;
 }

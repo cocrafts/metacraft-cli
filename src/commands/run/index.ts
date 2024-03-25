@@ -11,6 +11,7 @@ import {
 	parseConfigs,
 } from 'utils/cli';
 import { RootOptions } from 'utils/configs';
+import { ParsedMetacraftInternals } from 'utils/types';
 import { type CommandModule, Options } from 'yargs';
 
 type RunOptions = RootOptions & { e?: string };
@@ -34,27 +35,28 @@ const module: CommandModule<object, RunOptions> = {
 		const internal = await extractInternals();
 		const { logger } = internal.modules;
 		const parsedConfigs = parseConfigs(internal.configs, args);
+		const parsedInternals: ParsedMetacraftInternals = {
+			configs: parsedConfigs,
+			modules: internal.modules,
+		};
 		const { nodeEntry, webEntry, serverEntry } = await guessEntries(logger);
 
 		await launchNodeIfPossible({
 			entry: nodeEntry,
 			logger,
-			internal,
-			parsedConfigs,
+			internal: parsedInternals,
 		});
 
 		await launchWebIfPossible({
 			entry: webEntry,
 			logger,
-			internal,
-			parsedConfigs,
+			internal: parsedInternals,
 		});
 
 		await launchServerIfPossible({
 			entry: serverEntry,
 			logger,
-			internal,
-			parsedConfigs,
+			internal: parsedInternals,
 		});
 	},
 };

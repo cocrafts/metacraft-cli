@@ -4,17 +4,12 @@ import { resolve } from 'path';
 import { bareDevMiddleware } from 'middlewares/dev';
 import { bareWebpackMiddleware } from 'middlewares/webpack';
 import { combineMiddlewares } from 'utils/middleware';
-import type {
-	MetacraftInternals,
-	MetacraftLogger,
-	ParsedConfigs,
-} from 'utils/types';
+import type { MetacraftLogger, ParsedMetacraftInternals } from 'utils/types';
 
 interface LaunchArgs {
 	entry?: string;
 	logger: MetacraftLogger;
-	internal?: MetacraftInternals;
-	parsedConfigs?: ParsedConfigs;
+	internal?: ParsedMetacraftInternals;
 }
 
 const packageJson = global.packageJson;
@@ -22,10 +17,10 @@ const packageJson = global.packageJson;
 export const launchNodeIfPossible = async ({
 	entry,
 	logger,
-	parsedConfigs,
+	internal,
 }: LaunchArgs): Promise<void> => {
 	if (!entry) return;
-	logger.nodeDetected(entry, parsedConfigs);
+	logger.nodeDetected(entry, internal.configs);
 
 	try {
 		fork(resolve(__dirname, 'node.js'), [...process.argv.slice(2), entry], {
@@ -33,7 +28,7 @@ export const launchNodeIfPossible = async ({
 			stdio: 'inherit',
 		});
 	} catch (e) {
-		logger.launchNodeFailure(entry, parsedConfigs);
+		logger.launchNodeFailure(entry, internal.configs);
 	}
 };
 
@@ -41,15 +36,14 @@ export const launchWebIfPossible = async ({
 	entry,
 	logger,
 	internal,
-	parsedConfigs,
 }: LaunchArgs): Promise<void> => {
 	if (!entry) return;
 	const { devMiddlewares, webpackMiddlewares } = internal.configs;
 	const { webpack, DevServer } = internal.modules;
 
 	logger.greeting(packageJson.version);
-	logger.devDetected(entry, parsedConfigs);
-	logger.launchDevServer(parsedConfigs);
+	logger.devDetected(entry, internal.configs);
+	logger.launchDevServer(internal.configs);
 
 	const webpackConfigs = await combineMiddlewares({
 		internal,
@@ -65,27 +59,27 @@ export const launchWebIfPossible = async ({
 	const devServer = new DevServer(devConfigs, compiler);
 
 	devServer.start();
-	logger.listeningForChanges(parsedConfigs);
+	logger.listeningForChanges(internal.configs);
 };
 
 export const launchServerIfPossible = async ({
 	entry,
 	logger,
-	parsedConfigs,
+	internal,
 }: LaunchArgs): Promise<void> => {
 	if (!entry) return;
 
 	logger.greeting(packageJson.version);
-	logger.serverDetected(entry, parsedConfigs);
-	logger.launchServer(parsedConfigs);
+	logger.serverDetected(entry, internal.configs);
+	logger.launchServer(internal.configs);
 
 	try {
 		fork(resolve(__dirname, 'server.js'), [entry], {
 			cwd: process.cwd(),
 			stdio: 'inherit',
 		});
-		logger.listeningForChanges(parsedConfigs);
+		logger.listeningForChanges(internal.configs);
 	} catch (e) {
-		logger.launchNodeFailure(entry, parsedConfigs);
+		logger.launchNodeFailure(entry, internal.configs);
 	}
 };

@@ -2,12 +2,12 @@ import { Configuration as WebpackConfig } from 'webpack';
 import { Configuration as DevConfig } from 'webpack-dev-server';
 import {
 	DevMiddleware,
-	MetacraftInternals,
+	ParsedMetacraftInternals,
 	WebpackMiddleware,
 } from 'utils/types';
 
 type CombineArgs<T> = {
-	internal: MetacraftInternals;
+	internal: ParsedMetacraftInternals;
 	middlewares: T[];
 };
 
