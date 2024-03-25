@@ -20,7 +20,7 @@ export const defaultLogger = (chalk: any): MetacraftLogger => {
 			);
 		},
 		nodeDetected: (entry) => {
-			console.log(blue('Detected ') + yellow(entry) + gray('..'));
+			console.log(blue(' • running ') + yellow(entry) + gray('..'));
 		},
 		launchNodeFailure: (entry: string) => {
 			console.log(gray(mark) + red(' error launching ') + green(entry));
