@@ -61,7 +61,7 @@ export const extractInternals = async (): Promise<MetacraftInternals> => {
 
 	const moduleMap = merge(
 		{
-			chalk: 'node_modules/chalk',
+			ansiColors: 'node_modules/ansi-colors',
 			webpack: 'node_modules/webpack',
 			express: 'node_modules/express',
 			ProgressBarPlugin: 'node_modules/progress-bar-webpack-plugin',
@@ -79,7 +79,7 @@ export const extractInternals = async (): Promise<MetacraftInternals> => {
 		modules[key] = await crossRequire(moduleMap[key]);
 	}
 
-	modules['logger'] = defaultLogger(modules['chalk']);
+	modules['logger'] = defaultLogger(modules['ansiColors']);
 
 	const configs: MetacraftConfigs = merge(
 		{

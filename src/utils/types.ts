@@ -86,7 +86,7 @@ export interface MetacraftLogger {
 }
 
 export interface MetacraftModules {
-	chalk?: any;
+	ansiColors?: any;
 	webpack?: any;
 	express?: Express;
 	ProgressBarPlugin?: any;

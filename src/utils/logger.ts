@@ -1,7 +1,7 @@
 import type { MetacraftLogger, ParsedConfigs } from 'utils/types';
 
-export const defaultLogger = (chalk: any): MetacraftLogger => {
-	const { gray, red, green, blue, yellow, magenta } = chalk;
+export const defaultLogger = (ansiColors: any): MetacraftLogger => {
+	const { gray, red, green, blue, yellow, magenta } = ansiColors;
 
 	const mark = '｢metacraft｣';
 	const serverAddress = (configs: ParsedConfigs) =>
@@ -15,8 +15,8 @@ export const defaultLogger = (chalk: any): MetacraftLogger => {
 		noEntry: (allEntries) => {
 			console.log(
 				red('No entry found! ') +
-					'you need at least one entry on the following list:\n' +
-					gray(allEntries),
+				'you need at least one entry on the following list:\n' +
+				gray(allEntries),
 			);
 		},
 		nodeDetected: (entry) => {

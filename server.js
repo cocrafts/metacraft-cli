@@ -4,7 +4,7 @@ require('./injection');
 const { createServer } = require('http');
 const { resolve, relative } = require('path');
 const { watch } = require('chokidar');
-const { gray, green, red } = require('chalk');
+const { gray, green, red } = require('ansi-colors');
 const invalidate = require('invalidate-module');
 const express = require('express');
 const entryFile = process.argv[2];

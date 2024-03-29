@@ -6,8 +6,8 @@ export const generateProgressPlugin = (
 ) => {
 	let brightFlag = false;
 	let initialBuild = true;
-	const { ProgressBarPlugin, chalk } = modules;
-	const { gray, blue } = chalk;
+	const { ProgressBarPlugin, ansiColors } = modules;
+	const { gray, blue } = ansiColors;
 
 	return new ProgressBarPlugin({
 		width: 18,
