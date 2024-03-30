@@ -124,8 +124,6 @@ export const styleEntries = [
 ];
 
 export const nodeEntries = [
-	'index.js',
-	'index.ts',
 	'node.js',
 	'node.ts',
 	'index.node.js',
