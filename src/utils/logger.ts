@@ -15,8 +15,8 @@ export const defaultLogger = (ansiColors: any): MetacraftLogger => {
 		noEntry: (allEntries) => {
 			console.log(
 				red('No entry found! ') +
-				'you need at least one entry on the following list:\n' +
-				gray(allEntries),
+					'you need at least one entry on the following list:\n' +
+					gray(allEntries),
 			);
 		},
 		nodeDetected: (entry) => {

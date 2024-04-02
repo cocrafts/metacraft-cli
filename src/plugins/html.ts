@@ -1,7 +1,7 @@
-import { MetacraftInternals, ParsedConfigs } from 'utils/types';
+import { ParsedConfigs, ParsedMetacraftInternals } from 'utils/types';
 
 export const generateHtmlPlugin = (
-	{ modules }: MetacraftInternals,
+	{ modules }: ParsedMetacraftInternals,
 	parsedConfigs: ParsedConfigs,
 ) => {
 	const { HtmlPlugin } = modules;

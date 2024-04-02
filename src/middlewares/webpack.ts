@@ -3,8 +3,8 @@ import { resolve } from 'path';
 import { merge } from 'lodash';
 import { generateHtmlPlugin } from 'plugins/html';
 import { generateProgressPlugin } from 'plugins/progress';
-import { devEntries, guessEntry, parseConfigs, styleEntries } from 'utils/cli';
-import { crossRequire, crossResolve, isPackageDeclared } from 'utils/modules';
+import { devEntries, guessEntry, styleEntries } from 'utils/cli';
+import { crossResolve, isPackageDeclared } from 'utils/modules';
 import { WebpackMiddleware } from 'utils/types';
 import { getJsRule } from 'utils/webpack';
 
@@ -12,7 +12,7 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 	configs,
 	internal,
 ) => {
-	const parsedConfigs = parseConfigs(internal.configs);
+	const parsedConfigs = internal.configs;
 	const {
 		buildId,
 		env,
