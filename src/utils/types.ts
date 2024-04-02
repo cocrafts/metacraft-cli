@@ -1,4 +1,7 @@
-import type { Configuration, StatsOptions } from 'webpack';
+import type {
+	Configuration as WebpackConfiguration,
+	StatsOptions,
+} from 'webpack';
 import type { Configuration as DevConfiguration } from 'webpack-dev-server';
 import { Options as SwcOptions } from '@swc/core';
 import { EsbuildPluginOptions as EsBuildOptions } from 'esbuild-loader';
@@ -11,9 +14,9 @@ export interface ModuleAlias {
 }
 
 export type WebpackMiddleware = (
-	configs: Configuration,
+	configs: WebpackConfiguration,
 	internal: ParsedMetacraftInternals,
-) => Promise<Configuration>;
+) => Promise<WebpackConfiguration>;
 export type DevMiddleware = (
 	configs: DevConfiguration,
 	internal: ParsedMetacraftInternals,

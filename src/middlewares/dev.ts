@@ -1,10 +1,9 @@
 import { join } from 'path';
 
-import { parseConfigs } from 'utils/cli';
 import { DevMiddleware } from 'utils/types';
 
 export const bareDevMiddleware: DevMiddleware = async (configs, internal) => {
-	const { publicPath, port } = parseConfigs(internal.configs);
+	const { publicPath, port } = internal.configs;
 
 	return {
 		port,

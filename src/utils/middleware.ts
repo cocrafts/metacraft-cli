@@ -25,7 +25,7 @@ export const combineMiddlewares = async <
 		const nextConfig = await middleware(config, internal);
 
 		if (nextConfig) {
-			config = nextConfig;
+			config = nextConfig as C;
 		} else {
 			continue;
 		}

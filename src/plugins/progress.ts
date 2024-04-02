@@ -1,7 +1,7 @@
-import { MetacraftInternals, ParsedConfigs } from 'utils/types';
+import { ParsedConfigs, ParsedMetacraftInternals } from 'utils/types';
 
 export const generateProgressPlugin = (
-	{ modules }: MetacraftInternals,
+	{ modules }: ParsedMetacraftInternals,
 	{ isProduction }: ParsedConfigs,
 ) => {
 	let brightFlag = false;
