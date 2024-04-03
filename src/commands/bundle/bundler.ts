@@ -30,10 +30,12 @@ export const bundleWebBuild = async ({
 	const { webpackMiddlewares } = internal.configs;
 	const { webpack } = internal.modules;
 	const middlewares: WebpackMiddleware[] = [bare, ...webpackMiddlewares];
+
+	const parsedInternal = { configs: parsedConfigs, modules: internal.modules };
 	const config: Configuration = await combineMiddlewares<
 		WebpackMiddleware,
 		Configuration
-	>({ internal, middlewares });
+	>({ internal: parsedInternal, middlewares });
 	const compiler = webpack(config);
 
 	compiler.run((err: Error) => {
