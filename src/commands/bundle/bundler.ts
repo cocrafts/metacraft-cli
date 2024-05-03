@@ -48,7 +48,20 @@ export const bundleWebBuild = async ({
 };
 
 const prependScript = `require('dotenv').config();\n`;
-const prependCodePlugin = (code: string) => ({
+const appendScript = (port: string | number) => `
+if (configure) {
+	const port = process.env.PORT || ${port};
+	const express = require('express')();
+	const configured = configure();
+
+	if (configured && configured.then) {
+		configured.then((app) => app.listen(port));
+	} else {
+		app.listen(port);
+	}
+}`;
+
+const injectCodePlugin = (prepend: string, append: string) => ({
 	name: 'prepend-code',
 	setup(build: PluginBuild) {
 		build.onEnd(async (result: BuildResult) => {
@@ -58,7 +71,10 @@ const prependCodePlugin = (code: string) => ({
 				const originalBundle = await fs.readFile(outputPath, 'utf8');
 
 				if (isDotenvAvailable) {
-					await fs.writeFile(outputPath, `${code}\n${originalBundle}`);
+					await fs.writeFile(
+						outputPath,
+						`${prepend}\n${originalBundle}${append}`,
+					);
 				} else {
 					await fs.writeFile(outputPath, originalBundle);
 				}
@@ -67,7 +83,10 @@ const prependCodePlugin = (code: string) => ({
 	},
 });
 
-export const bundleNodeBuild = async ({ entry }: BundleArgs): Promise<void> => {
+export const bundleNodeBuild = async ({
+	entry,
+	parsedConfigs,
+}: BundleArgs): Promise<void> => {
 	if (!entry) return;
 
 	try {
@@ -77,7 +96,9 @@ export const bundleNodeBuild = async ({ entry }: BundleArgs): Promise<void> => {
 			platform: 'node',
 			packages: 'external',
 			outfile: `metacraft/${entry.replace('.ts', '.js')}`,
-			plugins: [prependCodePlugin(prependScript)],
+			plugins: [
+				injectCodePlugin(prependScript, appendScript(parsedConfigs.port)),
+			],
 		});
 	} catch (e) {
 		console.log('Node build failed', e);
