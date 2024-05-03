@@ -1,4 +1,5 @@
 import { promises as fs } from 'fs';
+import { join } from 'path';
 
 import { Configuration } from 'webpack';
 import { build, BuildResult, PluginBuild } from 'esbuild';
@@ -48,20 +49,8 @@ export const bundleWebBuild = async ({
 };
 
 const prependScript = `require('dotenv').config();\n`;
-const appendScript = (port: string | number) => `
-if (configure) {
-	const port = process.env.PORT || ${port};
-	const express = require('express')();
-	const configured = configure();
 
-	if (configured && configured.then) {
-		configured.then((app) => app.listen(port));
-	} else {
-		app.listen(port);
-	}
-}`;
-
-const injectCodePlugin = (prepend: string, append: string) => ({
+const injectCodePlugin = (prepend: string) => ({
 	name: 'prepend-code',
 	setup(build: PluginBuild) {
 		build.onEnd(async (result: BuildResult) => {
@@ -71,10 +60,7 @@ const injectCodePlugin = (prepend: string, append: string) => ({
 				const originalBundle = await fs.readFile(outputPath, 'utf8');
 
 				if (isDotenvAvailable) {
-					await fs.writeFile(
-						outputPath,
-						`${prepend}\n${originalBundle}${append}`,
-					);
+					await fs.writeFile(outputPath, `${prepend}\n${originalBundle}`);
 				} else {
 					await fs.writeFile(outputPath, originalBundle);
 				}
@@ -83,24 +69,51 @@ const injectCodePlugin = (prepend: string, append: string) => ({
 	},
 });
 
+const entryScript = (
+	entry: string,
+	port: string | number,
+) => `import express from 'express';
+import * as entry from '../${entry}';
+
+const configurator = entry.configureExpress || entry.configure;
+
+if (configurator) {
+	const port = process.env.PORT || ${port};
+	configurator(express).then((app) => {
+		app.listen(port, () => entry.onLaunchCompleted?.(port));
+	});
+}
+`;
+
 export const bundleNodeBuild = async ({
 	entry,
 	parsedConfigs,
 }: BundleArgs): Promise<void> => {
 	if (!entry) return;
+	const [entryName] = entry.split('.');
+	const injectedEntry = 'metacraft/___injectedBuildEntry.ts';
+
+	await fs.mkdir(join(process.cwd(), 'metacraft'), { recursive: true });
+	await fs.writeFile(
+		injectedEntry,
+		entryScript(entryName, parsedConfigs.serverPort),
+	);
 
 	try {
 		await build({
-			entryPoints: [entry],
+			entryPoints: [injectedEntry],
 			bundle: true,
 			platform: 'node',
 			packages: 'external',
 			outfile: `metacraft/${entry.replace('.ts', '.js')}`,
-			plugins: [
-				injectCodePlugin(prependScript, appendScript(parsedConfigs.port)),
-			],
+			plugins: [injectCodePlugin(prependScript)],
+			logOverride: {
+				'import-is-undefined': 'silent',
+			},
 		});
 	} catch (e) {
 		console.log('Node build failed', e);
+	} finally {
+		fs.unlink(injectedEntry);
 	}
 };

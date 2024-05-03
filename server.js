@@ -17,10 +17,10 @@ const httpServer = createServer();
 const defaultHandler = express();
 
 const configureServer = (httpServer, listen = false) => {
-	const entryMod = require(entryUri);
-	const configure = entryMod.configure || (() => undefined);
+	const { configureExpress, configure } = require(entryUri);
+	const configurator = configureExpress || configure || (() => undefined);
 
-	asyncWrap(configure(express, httpServer)).then((requestHandler) => {
+	asyncWrap(configurator(express, httpServer)).then((requestHandler) => {
 		if (listen) {
 			httpServer.listen('3005');
 		}
