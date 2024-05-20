@@ -22,21 +22,29 @@ const module: CommandModule<object, RootOptions> = {
 			vaultOptions.onePassword,
 		);
 
+		const vaultIds = vaultOptions?.onePassword?.vaultIds || [];
 		const vaultPromises: Promise<Item>[] = [];
-		for (const idPair of vaultOptions?.onePassword?.vaultIds || []) {
+		for (const idPair of vaultIds) {
 			const [vaultId, itemId] = idPair.split('/');
 			const promise = client.items.get(vaultId, itemId);
 			vaultPromises.push(promise);
 		}
 
 		const fieldMap: Record<string, ItemField> = {};
-		const vaults = await Promise.all(vaultPromises);
+		const results = await Promise.allSettled(vaultPromises);
 
-		for (const vault of vaults) {
-			for (const field of vault.fields) {
-				if (field.title?.length > 0 && field.field_type !== 'Unsupported') {
-					fieldMap[field.title] = field;
+		for (let i = 0; i < results.length; i += 1) {
+			const result = results[i];
+
+			if (result.status === 'fulfilled') {
+				for (const field of result.value.fields) {
+					if (field.title?.length > 0 && field.field_type !== 'Unsupported') {
+						fieldMap[field.title] = field;
+					}
 				}
+			} else {
+				const vaultId = vaultIds[i];
+				console.log(`Failed to get vault ${colors.gray(vaultId)}`);
 			}
 		}
 
