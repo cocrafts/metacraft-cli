@@ -2,6 +2,18 @@
 # yarn lockfile v1
 
 
+"@1password/sdk-core@0.1.0-beta.6":
+  version "0.1.0-beta.6"
+  resolved "https://registry.yarnpkg.com/@1password/sdk-core/-/sdk-core-0.1.0-beta.6.tgz#7b3f037a50a3caf2de67bd0f883bf261a262a791"
+  integrity sha512-2iwE1JFLruQlygCKKOZtkR2CC2DkVBmAaNrMGYVy09HTPCeuZgZxwnUVIsoqsXqdFQCv3HQTKJc6xt1JYLnvfA==
+
+"@1password/sdk@^0.1.0-beta.6":
+  version "0.1.0-beta.6"
+  resolved "https://registry.yarnpkg.com/@1password/sdk/-/sdk-0.1.0-beta.6.tgz#4bf250cacd014ad0d79ebe7641af38318e57b630"
+  integrity sha512-MmTigYx6tdST5q2f0uDebs14UIsf7SPRuq72YoY1nKMpnRyNxw9HmH9+oHOFfp45qFe18CXkmLsKeNyDSnoPaA==
+  dependencies:
+    "@1password/sdk-core" "0.1.0-beta.6"
+
 "@aashutoshrathi/word-wrap@^1.2.3":
   version "1.2.6"
   resolved "https://registry.yarnpkg.com/@aashutoshrathi/word-wrap/-/word-wrap-1.2.6.tgz#bd9154aec9983f77b3a034ecaa015c2e4201f6cf"

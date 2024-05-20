@@ -1,39 +1,56 @@
 import { type Options } from 'yargs';
 
-export const options: Record<string, Options> = {
-	p: {
-		description: 'Development server port',
-		alias: 'port',
-		type: 'number',
-		default: 3000,
-	},
-	s: {
-		description: 'Node.js (api) server port',
-		alias: 'serverPort',
-		type: 'number',
-		default: 3005,
-	},
-	i: {
-		description: 'Ip address of launched servers',
-		alias: 'host',
-		type: 'string',
-	},
-	d: {
-		description: 'Prevent api/ssr from launching',
-		alias: 'devOnly',
-		type: 'boolean',
-	},
-	ef: {
-		description:
-			"Force load env file, by default we use '.env.development' for run command, and '.env.production' for build command",
-		alias: 'envFile',
-		type: 'string',
-	},
-};
-
 export type RootOptions = {
 	port?: number;
 	host?: string;
 	devOnly?: boolean;
-	envFile?: string;
+	environment?: string;
+	environmentFile?: string;
+};
+
+export const rootOptions: Record<string, Options> = {
+	environment: {
+		description: 'Environment possible values: [development | production]',
+		alias: ['e'],
+		type: 'string',
+		default: 'development',
+	},
+	environmentFile: {
+		description: 'Clarify .env file instead of calculate from environment',
+		/* TODO: deprecate ef and envFile once the migration is done */
+		alias: ['ef', 'envFile'],
+		type: 'string',
+	},
+};
+
+export type PackOptions = {
+	port?: number;
+	serverPort?: number;
+	host?: string;
+	devOnly?: boolean;
+};
+
+export const runOptions: Record<keyof PackOptions, Options> = {
+	port: {
+		description: 'Development server port',
+		alias: 'p',
+		type: 'number',
+		default: 3000,
+	},
+	serverPort: {
+		description: 'Node.js (api) server port',
+		alias: 's',
+		type: 'number',
+		default: 3005,
+	},
+	host: {
+		description: 'Ip address of launched servers',
+		alias: ['i'],
+		type: 'string',
+	},
+	devOnly: {
+		description: 'Prevent api/ssr from launching',
+		alias: 'd',
+		type: 'boolean',
+	},
 };

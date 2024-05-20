@@ -3,6 +3,7 @@ import type {
 	StatsOptions,
 } from 'webpack';
 import type { Configuration as DevConfiguration } from 'webpack-dev-server';
+import { Client as OpClient, ItemField } from '@1password/sdk';
 import { Options as SwcOptions } from '@swc/core';
 import { EsbuildPluginOptions as EsBuildOptions } from 'esbuild-loader';
 import type { Express } from 'express';
@@ -29,20 +30,34 @@ export interface HotOptions {
 	dynamicPublicPath: boolean;
 }
 
+export interface VaultOptions {
+	onePassword?: {
+		auth: string;
+		integrationName: string;
+		integrationVersion: string;
+		vaultIds: string[];
+	};
+	callback: (
+		fieldMap: Record<string, ItemField>,
+		onePassword: OpClient,
+	) => Promise<void>;
+}
+
 interface CommonConfigs {
 	webpackMiddlewares?: WebpackMiddleware[];
 	devMiddlewares?: DevMiddleware[];
 	hotOptions?: HotOptions;
+	vaultOptions?: VaultOptions;
 	htmlTemplate?: string;
 	templateParameters?: Record<string, any>;
 	htmlPluginOptions?: Record<string, any>;
 	moduleAlias?: ModuleAlias;
 	resolves?: Record<string, string>;
-	buildId?: () => string;
 	useBabel?: boolean;
 	compiler?: 'babel' | 'swc' | 'esbuild';
 	useReact?: boolean;
 	withProgress?: boolean;
+	buildId?: () => string;
 }
 
 export type MetacraftConfigs = CommonConfigs & {
@@ -92,6 +107,7 @@ export interface MetacraftModules {
 	ansiColors?: any;
 	webpack?: any;
 	express?: Express;
+	onePassword?: any;
 	ProgressBarPlugin?: any;
 	HtmlPlugin?: any;
 	TerserPlugin?: any;
