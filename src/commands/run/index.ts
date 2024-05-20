@@ -4,33 +4,21 @@ import {
 	launchServerIfPossible,
 	launchWebIfPossible,
 } from 'commands/run/launcher';
-import { config as loadEnvironmentVariables } from 'dotenv';
-import {
-	extractInternals,
-	guessEnvironmentEntry,
-	parseConfigs,
-} from 'utils/cli';
-import { RootOptions } from 'utils/configs';
+import { extractInternals, loadEnvironments, parseConfigs } from 'utils/cli';
+import { PackOptions, RootOptions } from 'utils/configs';
 import { ParsedMetacraftInternals } from 'utils/types';
-import { type CommandModule, Options } from 'yargs';
+import { type CommandModule } from 'yargs';
 
-type RunOptions = RootOptions & { e?: string };
-
-const module: CommandModule<object, RunOptions> = {
+const module: CommandModule<object, RootOptions & PackOptions> = {
 	command: '$0',
 	aliases: ['dev'],
 	describe: 'Launch development server(s)',
-	builder: (yargs) => yargs.default('p', 3000).options(runOptions),
+	builder: (yargs) => yargs.default('p', 3000),
 	handler: async (args) => {
-		global.setEnv('ENV', args.e);
-		global.setEnv('NODE_ENV', args.e);
-
-		if (args.envFile) {
-			loadEnvironmentVariables({ path: args.envFile });
-		} else {
-			const envEntry = await guessEnvironmentEntry(false);
-			loadEnvironmentVariables({ path: envEntry });
-		}
+		await loadEnvironments(
+			args.environment as string,
+			args.environmentFile as string,
+		);
 
 		const internal = await extractInternals();
 		const { logger } = internal.modules;
@@ -62,12 +50,3 @@ const module: CommandModule<object, RunOptions> = {
 };
 
 export default module;
-
-const runOptions = {
-	environment: {
-		alias: 'e',
-		type: 'string',
-		default: 'development',
-		describe: 'Build environment',
-	} as Options,
-};

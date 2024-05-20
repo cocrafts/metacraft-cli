@@ -1,3 +1,4 @@
+import { config as loadEnvironmentVariables } from 'dotenv';
 import { merge } from 'lodash';
 import { defaultLogger } from 'utils/logger';
 import { crossRequire, crossResolve, exists } from 'utils/modules';
@@ -13,22 +14,31 @@ export const guessEntry = async (
 	entries: string[],
 ): Promise<string | undefined> => {
 	for (const entry of entries) {
-		if (await exists(entry)) {
+		if (entry && (await exists(entry || ''))) {
 			return entry;
 		}
 	}
 };
 
 export const guessEnvironmentEntry = async (
-	isProduction: boolean,
-): Promise<string> => {
-	const entries = isProduction ? envEntries.production : envEntries.development;
+	environment: string,
+): Promise<string | null> => {
+	return guessEntry([`.env.${environment}`, `.env`]);
+};
 
-	for (const entry of entries) {
-		if (await exists(entry)) {
-			return entry;
-		}
-	}
+export const loadEnvironments = async (
+	environment: string,
+	forceEntry: string,
+): Promise<string> => {
+	const maybeForceEntry = await guessEntry([forceEntry as string]);
+	const autoEntry = await guessEnvironmentEntry(environment);
+	const finalEntry = maybeForceEntry || autoEntry;
+
+	global.setEnv('ENV', environment);
+	global.setEnv('NODE_ENV', environment);
+	loadEnvironmentVariables({ path: finalEntry });
+
+	return finalEntry;
 };
 
 export const parseConfigs = (
@@ -64,6 +74,7 @@ export const extractInternals = async (): Promise<MetacraftInternals> => {
 			ansiColors: 'node_modules/ansi-colors',
 			webpack: 'node_modules/webpack',
 			express: 'node_modules/express',
+			onePassword: 'node_modules/@1password/sdk',
 			ProgressBarPlugin: 'node_modules/progress-bar-webpack-plugin',
 			HtmlPlugin: 'node_modules/html-webpack-plugin',
 			TerserPlugin: 'node_modules/terser-webpack-plugin',

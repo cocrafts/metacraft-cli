@@ -3,6 +3,7 @@ import { config as loadEnvironmentVariables } from 'dotenv';
 import {
 	extractInternals,
 	guessEnvironmentEntry,
+	loadEnvironments,
 	parseConfigs,
 } from 'utils/cli';
 import { RootOptions } from 'utils/configs';
@@ -10,7 +11,11 @@ import { CommandModule, Options } from 'yargs';
 
 import { bundleNodeBuild, bundleWebBuild } from './bundler';
 
-const module: CommandModule<object, RootOptions> = {
+type RunOptions = RootOptions & {
+	hydrate?: boolean;
+};
+
+const module: CommandModule<object, RunOptions> = {
 	command: 'bundle',
 	aliases: ['build', 'compile'],
 	describe: 'Build production bundle',
@@ -20,15 +25,9 @@ const module: CommandModule<object, RootOptions> = {
 			.group(Object.keys(bundleOptions), '[bundle] Options:');
 	},
 	handler: async (args) => {
-		global.setEnv('ENV', args.e);
-		global.setEnv('NODE_ENV', args.e);
-
-		if (args.envFile) {
-			loadEnvironmentVariables({ path: args.envFile });
-		} else {
-			const envEntry = await guessEnvironmentEntry(true);
-			loadEnvironmentVariables({ path: envEntry });
-		}
+		await loadEnvironments(args.environment, args.environmentFile);
+		const envEntry = await guessEnvironmentEntry(args.e as never);
+		loadEnvironmentVariables({ path: envEntry });
 
 		const internal = await extractInternals();
 		const parsedConfigs = parseConfigs(internal.configs, args);
@@ -60,17 +59,16 @@ const module: CommandModule<object, RootOptions> = {
 
 export default module;
 
-const bundleOptions = {
+const bundleOptions: Record<string, Options> = {
 	environment: {
-		alias: 'e',
 		type: 'string',
 		default: 'production',
 		describe: 'Build environment',
-	} as Options,
+	},
 	hydrate: {
 		alias: 'h',
 		type: 'boolean',
 		default: false,
 		describe: 'Hydrate pages to static HTML markup',
-	} as Options,
+	},
 };
