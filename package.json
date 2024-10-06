@@ -1,6 +1,6 @@
 {
   "name": "@metacraft/cli",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "lightning fast development/boilerplate tool for javascript/node.js",
   "author": "Walless Tribe",
   "bin": {
@@ -93,5 +93,6 @@
     "terser-webpack-plugin": "^5.3.7",
     "webpack-cli": "^4.10.0",
     "webpack-node-externals": "^3.0.0"
-  }
+  },
+  "packageManager": "yarn@4.5.0"
 }
