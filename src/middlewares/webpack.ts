@@ -130,7 +130,7 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 						'postcss-loader',
 						{
 							loader: 'sass-loader',
-							options: { api: 'modern-compiler' },
+							options: { api: 'modern' },
 						},
 					],
 				},
