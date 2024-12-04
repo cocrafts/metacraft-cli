@@ -80,7 +80,9 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 		entry: {
 			app: {
 				import: isProduction ? appEntries : [...hotEntries, ...appEntries],
-				filename: isProduction ? `${uniqueId}.js` : '[name].js',
+				filename: isProduction
+					? `${uniqueId}.[contenthash].js`
+					: `[name].[contenthash].js`,
 			},
 		},
 		optimization: {
@@ -95,8 +97,8 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 		output: {
 			publicPath,
 			path: resolve(process.cwd(), staticPath),
-			filename: '[name].js',
-			chunkFilename: '[id].js',
+			filename: '[name].[contenthash].js',
+			chunkFilename: '[id].[contenthash].js',
 		},
 		resolveLoader: {
 			modules: [innerModuleUri, shareModuleUri],
