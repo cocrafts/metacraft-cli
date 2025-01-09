@@ -142,9 +142,9 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 				},
 				{
 					test: /\.(png|jpg|svg|ttf)$/,
-					loader: 'file-loader',
-					options: {
-						name: '[name].[ext]',
+					type: 'asset/resource',
+					generator: {
+						filename: 'assets/[name].[hash][ext][query]',
 					},
 				},
 			],
