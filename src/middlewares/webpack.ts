@@ -141,7 +141,7 @@ export const bareWebpackMiddleware: WebpackMiddleware = async (
 					use: [CssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
 				},
 				{
-					test: /\.(png|jpg|svg|ttf)$/,
+					test: /\.(png|jpg|webp|avif|svg|ttf)$/,
 					type: 'asset/resource',
 					generator: {
 						filename: 'assets/[name].[hash][ext][query]',
